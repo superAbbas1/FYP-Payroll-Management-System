@@ -1,0 +1,87 @@
+/* EditAttendance.css */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  text-align: center;
+  color: blue;
+  font-family: 'Arial', sans-serif;
+  margin-bottom: 20px;
+}
+
+.month-selection, .employee-selection {
+  margin-bottom: 20px;
+}
+
+label {
+  display: inline-block;
+  width: 120px;
+  font-size: 16px;
+}
+
+select {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.attendance-table {
+  margin-top: 20px;
+}
+
+.attendance-table h3 {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.attendance-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+}
+
+.attendance-table th, .attendance-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.attendance-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.attendance-table td {
+  background-color: #fff;
+}
+
+.attendance-table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
