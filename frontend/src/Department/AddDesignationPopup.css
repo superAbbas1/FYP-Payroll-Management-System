@@ -1,0 +1,70 @@
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* High z-index to ensure it overlays other content */
+}
+
+.popup {
+  background-color: #fff;
+  padding: 20px;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.popup h2 {
+  margin-bottom: 10px;
+}
+
+.popup label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.popup input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.popup .popup-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.popup .popup-buttons button {
+  padding: 8px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.popup .popup-buttons button:first-child {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.popup .popup-buttons button:first-child:hover {
+  background-color: #0056b3;
+}
+
+.popup .popup-buttons button:last-child {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.popup .popup-buttons button:last-child:hover {
+  background-color: #5a6268;
+}

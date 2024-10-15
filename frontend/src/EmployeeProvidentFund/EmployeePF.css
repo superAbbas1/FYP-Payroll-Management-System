@@ -1,0 +1,64 @@
+.provident-funds-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color:  #f9f9f9; /* Dark grey background */
+    color: #3c3f41; /* White text */
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .provident-funds-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #3c3f41; /* Light golden color */
+    text-transform: uppercase;
+  }
+  
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .filter-container label {
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  
+  .filter-container select {
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+    background-color: #3c3f41; /* Slightly lighter grey */
+    color: #ffffff; /* White text */
+  }
+  
+  .provident-funds-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .provident-funds-table th,
+  .provident-funds-table td {
+    padding: 10px 15px;
+    border: 1px solid #ffffff;
+    text-align: center;
+  }
+  
+  .provident-funds-table th {
+    background-color:  #ffffff; /* Slightly lighter grey */
+    color:  #3c3f41; /* Light golden color */
+  }
+  
+  .provident-funds-table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Slightly lighter grey */
+  }
+  
+  .provident-funds-table tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Dark grey background */
+  }
+  

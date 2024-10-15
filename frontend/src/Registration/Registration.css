@@ -1,0 +1,87 @@
+/* Registration.css */
+
+.registration-container {
+  max-width: 100%; /* Increased width to accommodate more inputs in a row */
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+   /* Allow items to wrap to the next line */
+  gap: 10px; /* Adds space between the input fields */
+  margin-bottom: 15px;
+  flex-direction: row;
+}
+
+.form-row-company {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Creates two equal-width columns */
+  gap: 20px; /* Adds space between grid items */
+  align-items: center; /* Align items in the center */
+}
+
+.form-row-company select {
+  /* width: 100%; Ensures input and select boxes fill the grid cell */
+  padding: 10px 0 10px 0;
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-row-company input{
+  width: 100%;
+  padding: 10px 0 10px 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.inputBox input, .inputBox select, .emailBox, .passwordBox {
+  flex: 1; /* Ensures input fields take equal space */
+  min-width: 0; /* Ensures input boxes shrink properly in smaller containers */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #ffffff; /* White background color */
+  width: 100%;
+}
+
+
+
+.emailBox {
+  max-width: 30%; /* Limit width for smaller screens */
+}
+
+.passwordBox {
+  max-width: 30%; /* Limit width for smaller screens */
+}
+
+.submitButton {
+  display: block; /* Ensures the button is a block element for centering */
+  width: 150px; /* Limit button width to fit content */
+  padding: 10px 20px; /* Added padding for better button appearance */
+  background-color: #343a40; /* Dark grey button color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 auto; /* Centers the button horizontally */
+  text-align: center;
+}
+
+.submitButton:hover {
+  background-color: #23272b; /* Darker shade on hover */
+}
+

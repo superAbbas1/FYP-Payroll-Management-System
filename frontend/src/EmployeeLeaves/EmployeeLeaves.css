@@ -1,0 +1,84 @@
+/* leave-request.css */
+
+.form-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+    justify-content: space-between;
+  }
+
+  .reason{
+    padding: 0 30px 0 10px;
+    flex: 60%;
+  }
+
+  .reason textarea{
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .dates{
+    flex: 40%;
+    padding: 10px 0;
+  }
+
+  .starting-date{
+    padding: 10px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .dates input {
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  .dates input[type="date"] {
+    padding: 6px 10px;
+  }
+  
+  .leave-submit-button {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #2c2c2c;
+    color:  white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 60px;
+  }
+  
+  .leave-submit-button:hover {
+    background-color: #424242;
+  }
+  

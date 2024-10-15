@@ -1,0 +1,51 @@
+/* Styling for the entire salary container */
+.salary-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9; /* Dark grey background */
+  color: #3c3f41; /* White text */
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Styling for headings */
+.salary-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #3c3f41; /* Light golden color */
+  text-transform: uppercase;
+}
+
+/* Styling for salary details section */
+.salary-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.salary-details p {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background-color:#ffffff; /* Dark grey background */
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  width: 100%; /* Ensure it takes the full width of the container */
+}
+
+.salary-details p:hover {
+  transform: scale(1.05);
+}
+
+.salary-details p strong {
+  font-weight: bold;
+  color: #3c3f41; /* Light golden color */
+}
+
+.salary-details p span {
+  color: #3c3f41; /* White text */
+}

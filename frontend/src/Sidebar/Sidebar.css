@@ -1,0 +1,57 @@
+/* Sidebar.css */
+
+body{
+  overflow-y: auto;
+}
+
+.sidebar {
+  height: 100%;
+  /* Adjust height considering header height */
+  overflow-y: scroll;
+  /*position: fixed;*/
+
+  
+}
+
+
+.icon img {
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
+  filter: brightness(30%);
+}
+
+.sidebar-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  margin: 0 0 40px 10px;
+  transition: ease-in-out 0.2s;
+}
+
+
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #34495e;
+  border-radius: 10px;
+}
+
+.sidebar-link:hover img{
+  filter: brightness(100%);
+}
+
+.sidebar-menu li:focus-within img,
+.sidebar-menu li .active img {
+  filter: brightness(100%);
+}
+
+
+.sidebar-link:active .icons img{
+  filter: brightness(100%);
+}

@@ -1,0 +1,79 @@
+.admin-dashboard-container {
+    display: flex;
+    height: 100vh;
+    margin-top: 70px;
+    flex-direction: row;
+
+    position: relative;
+  }
+  
+  .admin-sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    position: relative;
+  }
+  
+  .admin-content {
+    flex: 85%;
+    padding: 30px;
+    background-color: #f4f4f9;
+  }
+
+  .emp-heading{
+    padding: 30px;
+  }
+  
+  .emp-heading h2 {
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .emp-guide-text {
+    color: #989898;
+    text-align: center;
+  }
+  
+  .admin-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 250px;
+  }
+  
+  .card h3 {
+    margin-bottom: 15px;
+    color: #007bff;
+    font-size: 1.5em;
+  }
+  
+  .card p {
+    font-size: 2em;
+    color: #333;
+  }
+  
+  .feedback-card p {
+    font-size: 1em;
+    color: #666;
+  }
+  
+
+
+  /* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #34495e;
+  border-radius: 10px;
+}

@@ -1,0 +1,60 @@
+.Mainheader {
+  background-color: rgb(88, 88, 88) !important;
+  color: white;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 10px 40px 10px 10px;
+}
+
+.Mainheader img{
+  height: 200px;
+  width: 200px;
+}
+
+
+.Mainheader h1 {
+  margin: 0;
+  font-size: 24px; 
+  text-align: center;
+}
+
+
+.logo-container {
+  width: 100px; /* Set the desired width */
+  height: 50px; /* Set the desired height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 100px; 
+  height: 100px;/* Maintain aspect ratio */
+ /* Crop the image to fill the container */
+}
+
+.logout-button{
+  margin-right: 20px;
+}
+
+.logout-button button {
+  background-color:rgb(56, 56, 56);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button button:hover {
+  background-color: rgb(152, 152, 152);
+}

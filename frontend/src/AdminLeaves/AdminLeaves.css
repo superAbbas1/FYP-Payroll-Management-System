@@ -1,0 +1,68 @@
+/* leave-requests.css */
+
+.requests-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .requests-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .request-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .request-details p {
+    margin: 5px 0;
+  }
+  
+  .request-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px; /* Add space between buttons */
+  }
+  
+  .accept-btn, .reject-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+    width: 100px; /* Reduce width of buttons */
+  }
+  
+  .accept-btn {
+    background-color: #0d0c47;
+    color: white;
+  }
+  
+  .accept-btn:hover {
+    background-color: #2a297a;
+  }
+  
+  .reject-btn {
+    background-color: #861c14;
+    color: white;
+  }
+  
+  .reject-btn:hover {
+    background-color: #e53935;
+  }
+  

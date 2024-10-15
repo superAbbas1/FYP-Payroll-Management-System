@@ -1,0 +1,86 @@
+.department-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.Departmentheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.add-designation-button {
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.add-designation-button:hover {
+  background-color: #218838;
+}
+
+.department-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.department-table th,
+.department-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.department-table th {
+  background-color: grey;
+  color: white;
+}
+
+.department-table td ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.department-table td ul li {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between; /* Align edit designation icons to the right */
+  align-items: center;
+}
+
+.action-icons {
+  display: flex;
+  gap: 5px; /* Adjust spacing between edit and delete icons */
+}
+
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  color: #007bff;
+}
+
+.edit-icon:hover,
+.delete-icon:hover {
+  color: #0056b3;
+}
