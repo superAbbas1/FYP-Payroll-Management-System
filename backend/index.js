@@ -17,6 +17,12 @@ const LeaveRequest = require("./db/LeaveRequest");
 const providentFundRoutes = require('./db/User');
 const loanRequestRoutes = require('./db/User');
 
+// index.js
+const express = require('express');
+const cors = require('cors');
+require('./db/config');
+const User = require('./db/User');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(express.json());
@@ -51,15 +57,15 @@ app.put('/api/employees/:id/updatePassword', async (req, res) => {
 
 
   try {
-   
+
     const user = await User.findById(req.params.id);
     console.log("user", user.password);
     if (!user) {
-      
+
       return res.status(404).send('User not found');
     }
 
-   
+
     user.password = crypto.AES.encrypt(newPassword, "bsjdsab12bsandb213").toString();
     await user.save();
 
@@ -94,14 +100,7 @@ app.post('/api/users/:id/validate-password', async (req, res) => {
 
 
 
-
-/////////loans for admin side/////////
-
-
-
-
-
-//////new waalaaa
+//////new one
 
 app.get('/api/loans', async (req, res) => {
   try {
@@ -129,37 +128,6 @@ app.get('/api/loans', async (req, res) => {
 
 
 
-
-
-
-
-
-
-// Get loan requests
-// app.get('/api/loans', async (req, res) => {
-//   try {
-//     const users = await User.find({ 'loanHistory': { $exists: true } });
-//     const loanRequests = users.map(user => ({
-//       _id: user._id,
-//       employeeName: `${user.fname} ${user.lname}`,
-//       employeeID: user.employeeID,
-//       amount: user.loanHistory.amount,
-//       date: user.loanHistory.date,
-//       approved: user.loanHistory.approved
-//     }));
-
-//     console.log("request: ", loanRequests);
-//     res.json(loanRequests);
-//   } catch (error) {
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-
-////put ///
-
-
-///new waala with subtraction///
 
 // Update loan request status
 app.put('/api/loans/:id', async (req, res) => {
@@ -197,25 +165,6 @@ app.put('/api/loans/:id', async (req, res) => {
 
 
 
-
-
-// // Update loan request status
-// app.put('/api/loans/:id', async (req, res) => {
-//   try {
-//     const { approved } = req.body;
-//     await User.updateOne(
-//       { _id: req.params.id, 'loanHistory.0': { $exists: true } },
-//       { $set: { 'loanHistory.0.approved': approved } }
-//     );
-
-
-//     res.send('Loan status updated');
-//   } catch (error) {
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-
 ///////////////////////                                     ///////////////////////
 ////                                      leave reques
 ///////////////////////                                      ///////////////////////
@@ -248,23 +197,6 @@ app.post('/api/leaves', async (req, res) => {
   }
 });
 
-// app.post('/api/leaves', async (req, res) => {
-//   try {
-//     const newLeaveRequest = new LeaveRequest({
-//       employeeId: req.body.employeeId,
-//       subject: req.body.subject,
-//       startDate: req.body.startDate,
-//       endDate: req.body.endDate,
-//       status: req.body.status
-//     });
-
-//     const savedLeaveRequest = await newLeaveRequest.save();
-//     res.status(201).json(savedLeaveRequest);
-//   } catch (error) {
-//     console.error('Error saving leave request:', error);
-//     res.status(500).json({ message: 'Failed to submit leave request', error: error.message });
-//   }
-// });
 
 
 app.get('/api/leaves', async (req, res) => {
@@ -398,42 +330,6 @@ app.get('/api/user/salary/:employeeID', async (req, res) => {
 
 
 
-
-
-
-
-
-
-///////////////////////                                          ///////////////////////
-////                                      attendance
-///////////////////////                                           ///////////////////////
-
-// app.post('/api/attendance', async (req, res) => {
-//   try {
-//     const { employeeId, date, status } = req.body;
-
-//     const parsedDate = new Date(date);
-//     const year = parsedDate.getFullYear();
-//     const month = parsedDate.getMonth() + 1; // Months are zero-indexed
-
-//     const newAttendance = new Attendance({
-//       employeeId,
-//       date: parsedDate,
-//       status,
-//       year,
-//       month
-//     });
-
-//     const savedAttendance = await newAttendance.save();
-//     res.status(200).json({ message: 'Attendance marked successfully', attendance: savedAttendance });
-//   } catch (error) {
-//     console.error('Error saving attendance:', error);
-//     res.status(500).json({ message: 'Failed to mark attendance', error: error.message });
-//   }
-// });
-
-
-
 app.get('/api/attendance', async (req, res) => {
   try {
     // Fetch all users and their attendance records
@@ -504,73 +400,6 @@ app.post('/api/attendance', async (req, res) => {
 
 
 
-
-
-
-
-// app.post('/api/attendance', async (req, res) => {
-//   try {
-//     const { employeeId, date, status } = req.body;
-
-//     console.log("employee ID: ", employeeId , "date" , date);
-
-//     const parsedDate = new Date(date);
-//     const year = parsedDate.getFullYear();
-//     const month = parsedDate.getMonth() + 1; // Months are zero-indexed
-
-// console.log("parseddate: ", parsedDate);
-
-//     // Check if attendance for this employee and date already exists
-//     const existingAttendance = await Attendance.findOne({
-//       employeeId,
-//       date: {
-//         $gte: new Date(parsedDate.setHours(0, 0, 0, 0)),
-//         $lt: new Date(parsedDate.setHours(23, 59, 59, 999))
-//       }
-//     });
-
-//     if (existingAttendance) {
-//       return res.status(400).json({ message: 'Attendance for this date has already been marked.' });
-//     }
-
-//     const newAttendance = new Attendance({
-//       employeeId,
-//       date: parsedDate,
-//       status,
-//       year,
-//       month
-//     });
-
-//     const savedAttendance = await newAttendance.save();
-//     res.status(200).json({ message: 'Attendance marked successfully', attendance: savedAttendance });
-//   } catch (error) {
-//     console.error('Error saving attendance:', error);
-//     res.status(500).json({ message: 'Failed to mark attendance', error: error.message });
-//   }
-// });
-
-
-// app.post('/api/attendance', async (req, res) => {
-//   try {
-//     console.log('Request body:', req.body);
-
-//     const { employeeId, date, status } = req.body;
-
-//     const newAttendance = new Attendance({
-//       employeeId,
-//       date,
-//       status,
-//     });
-
-//     const savedAttendance = await newAttendance.save();
-//     res.status(200).json({ message: 'Attendance marked successfully' });
-//   } catch (error) {
-//     console.error('Error saving attendance:', error);
-//     res.status(500).json({ message: 'Failed to mark attendance', error: error.message });
-//   }
-// });
-
-
 app.get('/api/attendance/:employeeId', async (req, res) => {
   try {
     const { employeeId } = req.params;
@@ -590,38 +419,6 @@ app.get('/api/attendance/:employeeId', async (req, res) => {
 });
 
 
-// Endpoint to fetch all attendance records for a specific employee
-// app.get('/api/adminattendance/:employeeId', async (req, res) => {
-//   try {
-//     const { employeeId } = req.params;
-//     // Find all records for the specified employee
-//     const attendanceRecords = await Attendance.find({ employeeId });
-
-//     if (!attendanceRecords || attendanceRecords.length === 0) {
-//       return res.status(404).json({ message: 'No attendance records found for this employee.' });
-//     }
-
-//     // Process the records to combine multiple records for the same day
-//     const processedRecords = attendanceRecords.reduce((acc, record) => {
-//       const dateKey = record.date.toISOString().split('T')[0]; // Use the date part of the timestamp
-//       if (!acc[dateKey]) {
-//         acc[dateKey] = { date: dateKey, status: record.status };
-//       } else {
-//         // Handle multiple records for the same date
-//         // You might want to decide on a strategy for handling this; e.g., take the latest status
-//         acc[dateKey].status = record.status; // Update with latest status
-//       }
-//       return acc;
-//     }, {});
-
-//     // Convert to an array and send response
-//     const result = Object.values(processedRecords);
-//     res.status(200).json({ attendanceRecords: result });
-//   } catch (error) {
-//     console.error('Error fetching attendance records:', error);
-//     res.status(500).json({ message: 'Failed to fetch attendance records', error: error.message });
-//   }
-// });
 app.get('/api/adminattendance/:employeeId', async (req, res) => {
   const { employeeId } = req.params;
   const { month, year } = req.query;
@@ -639,18 +436,7 @@ app.get('/api/adminattendance/:employeeId', async (req, res) => {
   }
 });
 
-
-
-
-
-
-
 // // Create a new salary record
-
-// Backend code snippet
-// Create or Update Salary Record
-// server.js or wherever you have defined your API routes
-
 
 app.post('/api/salary', async (req, res) => {
   console.log("Entered the /api/salary endpoint");
@@ -709,81 +495,7 @@ app.post('/api/salary', async (req, res) => {
 
 
 
-
-
-// ye thk chl rhi hai
-// API endpoint
-// app.post('/api/salary', async (req, res) => {
-//   console.log("Entered the /api/salary endpoint");
-//   const { employeeID, salary } = req.body;
-
-//   // Validate input
-//   if (!employeeID || !salary) {
-//     console.log('Invalid input:', { employeeID, salary });
-//     return res.status(400).json({ error: 'Employee ID and salary are required.' });
-//   }
-
-//   try {
-//     // Find the user by employeeID
-//     const user = await User.findById(employeeID);
-
-//     if (!user) {
-//       console.log("Employee not found");
-//       return res.status(404).json({ error: 'Employee not found.' });
-//     }
-
-//     // Get the current month
-//     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-
-//     // Add the current salary to the salaryHistory array before updating
-//     user.salaryHistory.push({ salary: user.salary, month: currentMonth });
-
-//     // Update the salary
-//     user.salary = salary;
-
-//     // Calculate the next month
-//     const nextMonth = new Date(new Date().setMonth(new Date().getMonth() + 1))
-//       .toLocaleString('default', { month: 'long' });
-
-//     // Add the updated salary for the next month to the salaryHistory array
-//     user.salaryHistory.push({ salary: salary, month: nextMonth });
-
-//     // Save the updated user
-//     await user.save();
-
-//     console.log('Salary updated for user:', user);
-//     res.status(200).json({ 
-//       message: `Salary updated from ${user.salary} to ${salary} successfully for ${nextMonth}.`, 
-//       user 
-//     });
-//   } catch (error) {
-//     console.error('Error updating salary:', error);
-//     res.status(500).json({ error: 'Failed to update salary' });
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //////////update salary
-// server.js or wherever you have defined your API routes
 
 // server.js or wherever you have defined your API routes
 
@@ -810,29 +522,6 @@ app.get('/api/salary/:employeeId', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch salary' });
   }
 });
-
-// Get salary record by employee ID and date
-// Get salary record by employee ID and date
-// app.get('/api/salary/:employeeId/:date', async (req, res) => {
-//   const { employeeId, date } = req.params;
-
-//   try {
-//     const formattedDate = new Date(date); // Ensure correct format
-//     const salaryRecord = await SalaryRecord.findOne({
-//       employeeId,
-//       date: formattedDate,
-//     });
-
-//     if (!salaryRecord) {
-//       return res.status(404).json({ error: 'Salary record not found.' });
-//     }
-
-//     res.json({ salaryRecord });
-//   } catch (error) {
-//     console.error('Error fetching salary record:', error);
-//     res.status(500).json({ error: 'Failed to fetch salary record' });
-//   }
-// });
 
 
 
@@ -864,7 +553,7 @@ app.get('/api/salary/changes/:employeeId', async (req, res) => {
 
 
 
-// Get all salary records for an employee
+
 // Get all salary records for an employee
 app.get('/api/employees/:employeeId/salaries', async (req, res) => {
   const { employeeId } = req.params;
@@ -1059,70 +748,6 @@ Payroll Management System Team
 
 
 
-///////wihthout PF logicsss/////////
-
-// app.post("/register", async (req, res) => {
-//   try {
-//     // Check if email already exists
-//     const existingUser = await User.findOne({ email: req.body.email });
-//     if (existingUser) {
-//       return res.status(400).json({ error: "Email already in use" });
-//     }
-
-//     // Check if CNIC already exists
-//     const existingCnic = await User.findOne({ cnic: req.body.cnic });
-//     if (existingCnic) {
-//       return res.status(400).json({ error: "CNIC already in use" });
-//     }
-
-//     const department = await Department.findById(req.body.department);
-//     if (!department) {
-//       return res.status(400).json({ error: "Invalid department ID" });
-//     }
-
-//     const departmentName = department.name;
-
-//     // Generate a unique employeeID
-//     const employeeID = `EMP-${Date.now()}`; // You can use UUID or a better approach
-
-//     // Create new user with a unique employeeID
-//     const newUser = new User({
-//       employeeID,
-//       fname: req.body.fname,
-//       lname: req.body.lname,
-//       department: departmentName,
-//       designation: req.body.designation,
-//       city: req.body.city,
-//       phoneNum: req.body.phoneNum,
-//       bankName: req.body.bankName,
-//       accountName: req.body.accountName,
-//       accountNum: req.body.accountNum,
-//       cnic: req.body.cnic,
-//       joining: req.body.joining,
-//       email: req.body.email,
-//       password: req.body.password,
-//       address: req.body.address,
-//       salary: req.body.salary,
-//       status: req.body.status,
-//       role: "employee",
-//     });
-
-//     await newUser.save();
-
-//     // Return the created user's employeeID
-//     res.status(201).json({ employeeID: newUser.employeeID });
-//   } catch (error) {
-//     console.error("Error registering user:", error);
-//     if (error.code === 11000) {
-//       // Handle duplicate key error (unique constraint violation)
-//       const field = Object.keys(error.keyValue)[0];
-//       return res.status(400).json({ error: `Duplicate value for field: ${field}` });
-//     }
-//     res.status(500).json({ error: "Failed to register user." });
-//   }
-// });
-
-
 
 
 /////////PF work regarding the emplpoyee ?///////////////
@@ -1313,47 +938,7 @@ app.put('/employees/:id', async (req, res) => {
 });
 
 
-// app.post("/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
 
-//     // Check if the credentials match the admin's hardcoded credentials
-//     if (email === "admin" && password === "acbd1324") {
-//       // If admin credentials match, return success with admin role
-//       return res.status(200).json({
-//         message: "Login successful",
-//         user: {
-//           email: "admin",
-//           role: "admin",
-//         },
-//       });
-//     }
-
-//     // Find the user by email in the database
-//     const user = await User.findOne({ email });
-
-//     if (user) {
-//       // Decrypt stored password and compare with input password
-//       const decryptedPassword = user.decryptPassword(); // Assuming this is a method in your User model
-//       if (password === decryptedPassword) {
-//         // Login successful for regular user
-//         return res.status(200).json({
-//           message: "Login successful",
-//           user: {
-//             email: user.email,
-//             role: user.role,
-//           },
-//         });
-//       }
-//     }
-
-//     // If credentials don't match, send an error response
-//     res.status(401).json({ error: "Invalid email or password" });
-//   } catch (err) {
-//     console.error("Login error:", err);
-//     res.status(500).json({ error: "Failed to login" });
-//   }
-// });
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -1410,16 +995,6 @@ Payroll Management System Team
             res.send({ message: "Your password has been sent to your email" });
           }
         });
-
-
-
-
-
-
-
-
-
-
 
         return res.status(200).json({
           message: "Login successful",
@@ -1645,46 +1220,27 @@ app.get('/api/employees', async (req, res) => {
 app.get('/employeeslist', async (req, res) => {
   try {
 
-    // console.log('req : ', req.query);
     const { year, month, department, designation } = req.query;
-
-    // console.log('year : ', year, ' month : ', month, ' department; ', department, ' designation  :', designation);
-
-    // Initialize query object
     let query = {};
 
-    // Add department filter if departmentId is provided
     if (department) {
-      query.department = department; // assuming departmentId is stored directly as a string in the user document
-      // console.log('query.department: ', query.department);
+      query.department = department;
     }
-
-    // Add designation filter if designation is provided
     if (designation) {
       query.designation = designation;
     }
-
-    // Add attendance filter if year and month are provided
     if (year && month) {
       query['attendance.month'] = month;
     }
 
-    // Find users based on the query
-
-
-
-    // console.log('query: ', query );
     const employees = await User.find(query);
-    // console.log('employe: ', employees);
-    // Return the list of employees
+
     res.json(employees);
   } catch (error) {
     console.error('Error fetching employees:', error);
     res.status(500).json({ error: 'Failed to fetch employees' });
   }
 });
-
-
 
 
 
@@ -1699,6 +1255,42 @@ app.get("/departments", async (req, res) => {
   }
 });
 
+
+app.post("/register", async (req, res) => {
+  try {
+    let user = new User(req.body);
+    let result = await user.save();
+    res.send(result);
+  } catch (err) {
+    res.status(500).send({ error: "Failed to register user" });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (user && await bcrypt.compare(password, user.password)) {
+      res.send({ message: "Login successful", user });
+    } else {
+      res.status(401).send({ error: "Invalid email or password" });
+    }
+  } catch (err) {
+    res.status(500).send({ error: "Failed to login" });
+  }
+});
+
+app.get("/employees", async (req, res) => {
+  try {
+    let employees = await User.find();
+    console.log("Employees fetched: ", employees);
+    res.send(employees);
+  } catch (err) {
+    console.error("Failed to fetch employees: ", err);
+    res.status(500).send({ error: "Failed to fetch employees" });
+  }
+});
+
 app.delete('/employees/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -1709,11 +1301,39 @@ app.delete('/employees/:id', async (req, res) => {
       res.status(404).send({ message: 'Employee not found' });
     }
   } catch (err) {
+    console.error("Failed to delete employee: ", err);
     res.status(500).send({ error: "Failed to delete employee" });
   }
 });
 
+app.post("/attendance/:id", async (req, res) => {
+  const { id } = req.params;
+  const { month, dates } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send({ message: "Employee not found" });
+    }
+
+    const existingAttendance = user.attendance.find(a => a.month === month);
+    if (existingAttendance) {
+      existingAttendance.dates = dates;
+    } else {
+      user.attendance.push({ month, dates });
+    }
+
+    await user.save();
+    res.status(200).send({ message: "Attendance saved successfully" });
+  } catch (error) {
+    console.error("Failed to save attendance: ", error);
+    res.status(500).send({ error: "Failed to save attendance" });
+  }
+});
+
+
+
+
 app.listen(5000, () => {
   console.log("Server is running on port 5000");
 });
-

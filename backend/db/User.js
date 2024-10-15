@@ -1,8 +1,19 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto-js");
+const bcrypt = require("bcrypt");
 
 // Define the secret key for encryption
 const secretKey = "bsjdsab12bsandb213"; // Use a secure secret key
+
+// Attendance Schema
+const attendanceSchema = new mongoose.Schema({
+  month: { type: String, required: true },
+  dates: { 
+    type: Map, 
+    of: String, 
+    default: {} 
+  },
+});
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
@@ -12,8 +23,8 @@ const userSchema = new mongoose.Schema({
   },
   employeeID: { 
     type: String,
-    unique: true, // Ensure employeeID is unique
-    required: true, // Make it a required field
+    unique: true, 
+    required: true, 
   },
   fname: String,
   lname: String,
@@ -24,9 +35,9 @@ const userSchema = new mongoose.Schema({
   bankName: String,
   accountName: String,
   accountNum: String,
-  cnic: { type: String, unique: true },  // Ensure CNIC is unique
+  cnic: { type: String, unique: true },  
   joining: String,
-  email: { type: String, unique: true },  // Ensure email is unique
+  email: { type: String, unique: true },  
   password: String,
   address: String,
   salary: String,
@@ -35,67 +46,62 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "employee",
   },
+  attendance: [attendanceSchema],
 
-  // Provident Fund Fields
+  
   providentFund: {
     balance: {
       type: Number,
-      default: 0, // Initial provident fund balance
+      default: 0,
     },  
     history: [
       {
-        month: String, // Store the month (e.g., "January")
-        amount: Number, // Amount deducted for provident fund in that month
+        month: String, 
+        amount: Number, 
       }
     ]
   },
 
-  // Loan History
+ 
   loanHistory: [
     {
-      amount: Number, // Amount of loan requested
-      date: Date, // Date of loan request
+      amount: Number,
+      date: Date, 
       approved: {
         type: Boolean,
-        default: false, // Approval status, default is not approved
+        default: false, 
       },
-      remainingBalance: Number, // Provident fund balance after loan approval
+      remainingBalance: Number, 
     }
   ],
 
   salaryHistory: [
     {
       salary: String,
-      month: String, // You can use Date to store the full date and extract the month later
+      month: String, 
     }
   ],
 });
 
 
-
-
-
-
-// Encrypt password before saving
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function(next) {
   const user = this;
 
-  // Encrypt password only if it's new or modified
-  if (user.isModified("password")) {
-    user.password = crypto.AES.encrypt(user.password, secretKey).toString();
+
+  if (user.isModified("password") || user.isNew) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
   }
 
   next();
 });
 
-// Method to decrypt password
+
 userSchema.methods.decryptPassword = function () {
   const bytes = crypto.AES.decrypt(this.password, secretKey);
   return bytes.toString(crypto.enc.Utf8);
 };
 
-// Create and export the User model
+
 const User = mongoose.model("User", userSchema);
-
 module.exports = User;
-
