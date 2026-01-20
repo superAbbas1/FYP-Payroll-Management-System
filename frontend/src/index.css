@@ -189,6 +189,7 @@ strong {
 /* Grid Layouts */
 .grid-1-col {
   display: grid;
+  gap: 6px;
   grid-template-columns: repeat(1, 1fr);
 }
 

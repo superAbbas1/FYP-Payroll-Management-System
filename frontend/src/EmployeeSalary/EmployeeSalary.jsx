@@ -23,8 +23,10 @@ const EmployeeSalary = () => {
           console.error('No employee ID found in localStorage.');
           return;
         }
+        console.log('Fetching salary for employee ID:', employeeID);
 
         const response = await axios.get(`http://localhost:5000/api/user/salary/${employeeID}`);
+        console.log('Fetched salary data:', response.status);
         const salary = response.data.salary;
         
         setGrossSalary(salary);
