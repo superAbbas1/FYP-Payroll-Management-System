@@ -1,0 +1,366 @@
+.main-container {
+    display: flex;
+    height: 100vh;
+    background-color: white;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.left-section {
+    background: linear-gradient(to left, rgb(84, 84, 84) 10%, black);
+    color: white;
+    width: 70%;
+    clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 0 100%);
+    flex-direction: column;
+}
+
+.left-section .logo-container {
+    padding: 1rem 0 0 2rem;
+}
+
+.LS-content {
+    text-align: left;
+    padding: 1rem 2rem;
+    opacity: 0;
+    width: 75%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: slideLeftFadeIn 1s forwards ease-out;
+}
+
+.LS-content h2 {
+    margin-top: 10px;
+}
+
+@keyframes slideLeftFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-10%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.LS-content h1 {
+    margin-bottom: 0;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.LS-content p {
+    font-size: clamp(0.7rem, 2vw, 1.1rem);
+}
+
+.right-section {
+    width: 40%;
+    padding: 5rem 6rem;
+    position: relative;
+}
+
+.back-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    color: black;
+    font-size: 24px;
+    transition: ease-in-out 0.1s;
+    z-index: 1;
+    visibility: hidden;
+}
+
+.back-icon.visible {
+    visibility: visible;
+}
+
+.back-icon:hover {
+    color: rgb(85, 85, 85);
+}
+
+.right-section hr {
+    margin: 5% 0;
+    height: 2px;
+    width: 80%;
+    display: flex;
+    transform: scaleX(0);
+    transform-origin: left;
+    justify-self: center;
+    background-color: black;
+    transition: transform 2s ease-out, opacity 2s ease-out;
+    animation: appear 1s forwards ease-out;
+}
+
+@keyframes appear {
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+
+@keyframes slideRightFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(5%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.RS-content h2 {
+    margin-top: 0;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    text-align: center;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+}
+
+.forgot-section h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    text-align: center;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.RS-content > p {
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    text-align: center;
+    font-weight: 400;
+    color: #555555;
+    line-height: 1.6;
+    margin: 0 0 1.2rem 0;
+}
+
+.RS-content.visible {
+    display: block;
+    /* animation: slideRightFadeIn 0.4s forwards ease-out; */
+    /* animation-delay: 0s !important; */
+}
+
+.login-form {
+    margin: 5% auto;
+    width: 100%;
+}
+
+.login-form label {
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    display: block;
+    margin-top: 10px;
+    color: #333333;
+}
+
+.login-form .inputBox {
+    transition: ease-in-out 0.2s;
+    width: -webkit-fill-available;
+    padding: 10px;
+}
+
+.inputBox:hover {
+    border-color: black;
+}
+
+.forgot-password {
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    color: black;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+
+.forgot-password:hover {
+    color: rgb(68, 68, 68);
+}
+
+.login-button,
+.send-button {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 2px;
+    border: 1px solid black;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 25px;
+    width: 100%;
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+}
+
+.login-button:hover,
+.send-button:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    transition: 0.2s ease-in-out;
+}
+
+.RS-content .button-loading {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    transition: 0.2s ease-in-out;
+}
+
+.forgot-section {
+    opacity: 0;
+    display: none;
+    position: absolute;
+    /* top: 150px; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+    text-align: center;
+    padding: 2% 10%;
+}
+
+.forgot-section h1 {
+    margin: 0 0 20px;
+}
+
+.forgot-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.forgot-form label {
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    text-align: left;
+    margin-top: 10px;
+    color: #333333;
+}
+
+.forgot-inputBox {
+    transition: ease-in-out 0.2s;
+    height: 30px;
+    padding: 5px 10px;
+    border: 1px solid rgb(190, 190, 190);
+    border-radius: 3px;
+    margin-top: 5px;
+}
+
+.forgot-inputBox:hover {
+    border-color: black;
+}
+
+.forgot-section p {
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    font-weight: 400;
+    color: #333333;
+    line-height: 1.6;
+    margin-top: 1rem;
+}
+
+.forgot-section.visible {
+    display: contents;
+    opacity: 0;
+    /* animation: slideRightFadeIn 1s forwards ease-out; */
+    /* animation-delay: 0s; */
+}
+
+.RS-content.hidden {
+    display: none;
+}
+
+
+.spinner {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-self: center;
+    margin: 0px 0 0 0;
+    position: relative;
+}
+
+.spinner::before {
+    border: 2px solid black;
+    border-radius: 50%;
+    position: absolute;
+    content: '';
+    display: block;
+}
+
+.spinner::before {
+    width: 15px;
+    height: 15px;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    animation: spinner-1o3y8q 0.3s infinite linear reverse;
+}
+
+/* .spinner::after {
+    animation: spinner-1o3y8q 0.3s infinite linear;
+    height: 5px;
+    width: 5px;
+    border-right-color: transparent;
+    border-top-color: transparent;
+} */
+
+@keyframes spinner-1o3y8q {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .main-container .left-section {
+        clip-path: none;
+        width: 100%;
+    }
+
+    .main-container .right-section {
+        width: 100%;
+        padding: 0;
+    }
+
+    .login-form .inputBox {
+        box-sizing: border-box;
+    }
+
+    .right-section hr {
+        width: 50%;
+        display: flex;
+        justify-self: center;
+    }
+
+    .RS-content {
+        padding: 2rem;
+    }
+
+    .forgot-section {
+        position: relative;
+        transform: translate(0);
+        top: auto;
+        left: auto;
+        padding: 0;
+    }
+
+    .forgot-section h1 {
+        margin-bottom: 0;
+        margin-top: 1rem;
+    }
+
+    .forgot-section .forgot-form {
+        padding: 2rem;
+    }
+
+    .forgot-section p {
+        margin-top: 0;
+    }
+}

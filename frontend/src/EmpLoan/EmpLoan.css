@@ -1,0 +1,77 @@
+.emp-loan-container {
+  margin: auto;
+}
+
+
+.loan-request-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.loan-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.loan-history-table th,
+.loan-history-table td {
+  padding: 12px 5px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.loan-history-table th {
+  background-color: black;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.loan-history-table td {
+  background-color: #ffffff;
+  text-align: center;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  color: #333333;
+}
+
+
+
+.loan-history-table tr:nth-child(even) td {
+  background-color: #f2f2f2;
+}
+
+.loan-history-table .pf-loan-status-icon {
+  background-color: transparent !important;
+  border: none;
+  position: relative;
+  padding: 1px;
+}
+
+.loan-history-table .pf-loan-status-icon svg {
+  width: 15px;
+  cursor: pointer;
+}
+
+.loan-history-table .pf-loan-status {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: -4rem;
+  top: 0;
+  background: white;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.loan-history-table .pf-loan-status-icon:hover .pf-loan-status {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}

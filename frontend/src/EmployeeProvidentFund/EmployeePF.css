@@ -1,0 +1,102 @@
+.provident-funds-container {
+  max-width: 800px;
+  padding: 20px 0;
+  color: black;
+}
+
+.provident-funds-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  text-transform: uppercase;
+}
+
+.provident-funds-container .total-fund-balance h2 {
+  margin-bottom: 20px;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.provident-funds-container .filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 30px;
+}
+
+.provident-funds-container .filter-container label {
+  margin-right: 10px;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  color: #333333;
+}
+
+.pf-info {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #e3f2fd;
+  border-radius: 5px;
+  color: #1565c0;
+  font-size: 14px;
+}
+
+.provident-funds-container .provident-funds-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.provident-funds-container .provident-funds-table th,
+.provident-funds-container .provident-funds-table td {
+  padding: 10px 15px;
+  border: 1px solid #ffffff;
+  text-align: center;
+}
+
+.provident-funds-container .provident-funds-table th {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.provident-funds-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.provident-funds-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.provident-funds-table tbody tr:hover {
+  background-color: #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.available-years {
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+@media screen and (max-width: 600px) {
+  .provident-funds-container .filter-container {
+    flex-direction: column;
+  }
+}

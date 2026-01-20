@@ -1,0 +1,53 @@
+.add-designation-container.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* High z-index to ensure it overlays other content */
+}
+
+.add-designation-container .popup {
+  background-color: #fff;
+  padding: 20px;
+  width: 80%;
+  max-width: 400px;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.add-designation-container .popup h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.add-designation-container .popup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  color: #333333;
+}
+
+.add-designation-container .popup input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.add-designation-container .popup .popup-buttons {
+  margin-top: 20px;
+  text-align: right;
+}

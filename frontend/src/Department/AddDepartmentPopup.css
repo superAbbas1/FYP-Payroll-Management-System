@@ -1,0 +1,167 @@
+/* AddDepartmentPopup.css */
+
+.new-department-container.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.new-department-container .popup {
+  background-color: #fff;
+  padding: 20px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.new-department-container .save-button {
+  background-color: black;
+  border: 1.5px solid black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  transition: all 0.2s ease-in-out;
+}
+.new-department-container .save-button:hover {
+  background-color: transparent;
+  color: black;
+  border-color: black;
+}
+
+.new-department-container .cancel-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  border: 1.5px solid black;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  transition: all 0.2s ease-in-out;
+}
+.new-department-container .cancel-button:hover {
+  background-color: black;
+}
+.new-department-container .cancel-button svg {
+  width: 100%;
+  display: block;
+  transition: color 0.2s ease-in-out;
+}
+.new-department-container .cancel-button svg:hover {
+  color: white
+}
+
+.new-department-container .designation-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.popup h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.new-department-container .popup label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  color: #333333;
+}
+
+.designation-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.designation-input-container button {
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 2px;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+.designation-input-container button:hover {
+  background-color: inherit;
+}
+.designation-input-container button svg {
+  width: 100%;
+  display: block;
+  color: black;
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.designation-input-container button:active svg {
+  transform: scale(0.5) rotate(0deg);
+}
+
+.new-department-container .popup input,
+.new-department-container .popup textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.popup .designation-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.popup .designation-input input {
+  flex: 1;
+}
+
+.designation-list li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.designation-list button {
+  padding: 0;
+  width: 13px;
+  height: 13px;
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.designation-list button:hover {
+  background-color: inherit;
+}
+
+.popup .popup-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.popup .popup-buttons .save-button {
+  padding: 8px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}

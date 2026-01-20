@@ -1,0 +1,40 @@
+.salary-container {
+  padding: 20px;
+  color: black;
+}
+
+.salary-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  color: black;
+  text-transform: uppercase;
+}
+
+.salary-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.salary-details p {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  background-color: #ffffff;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  width: 100%;
+  margin: 0;
+}
+
+.salary-details p strong {
+  font-weight: bold;
+  color: black;
+}
+
+.salary-details p span {
+  color: black;
+}

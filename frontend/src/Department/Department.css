@@ -1,0 +1,188 @@
+
+.Departmentheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.department-add-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+  border: 1.5px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.department-add-button svg {
+  width: 15px;
+}
+
+
+.department-add-button:hover {
+  background-color: transparent;
+  color: black;
+  border-color: black;
+}
+
+.add-designation-button {
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  border: 1px solid #28a745;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  float: right;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.add-designation-button svg {
+  width: 12px;
+  margin-right: 5px;
+  strokeWidth: 3px;
+  transition: color 0.2s ease-in-out;
+}
+
+.add-designation-button:hover {
+  background-color: transparent;
+  color: black;
+  border-color: black;
+}
+
+.add-designation-button:hover svg {
+  color: black;
+}
+
+.department-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.department-table tr {
+  position: relative;
+}
+
+.department-table th,
+.department-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.department-table .designation-list svg {
+  width: 15px;
+  display: block;
+  color: red;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.department-table .designation-list svg:hover {
+  color: black;
+}
+
+.department-table th {
+  background-color: black;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+.department-table td ul {
+  padding: 0;
+  list-style-type: none;
+  margin: 0;
+}
+
+.department-table .designation-list li {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+}
+
+
+.action-icons {
+  display: flex;
+  gap: 5px;
+}
+
+.department-table .department-action-button {
+  padding: 0 0 0 5px;
+  border: none;
+}
+.department-action-button__wrapper {
+    display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.department-table .department-action-button svg {
+  width: 1rem;
+  strokeWidth: 2px;
+  color: red;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.department-table .department-action-button .view-description-icon svg {
+  color: black;
+}
+
+.department-table .department-delete-button svg:hover {
+  color: black;
+}
+
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  color: #007bff;
+}
+
+.edit-icon:hover,
+.delete-icon:hover {
+  color: #0056b3;
+}
+
+
+
+@media screen and (max-width: 768px) {
+  .Departmentheader {
+    flex-direction: column;
+  }
+  .designation-description-cell {
+    max-width: 200px;
+    overflow: hidden;
+    position: absolute;
+    background-color: white;
+    display: none;
+    padding: 10px;
+    top: 10px;
+    border-radius: 5px;
+    right: 7%;
+  }
+
+  .designation-description-mobile-view {
+    display: block;
+    animation: slide-down 0.2s ease-in-out forwards;
+  }
+  .designation-description-hidden {
+    animation: slide-up 0.2s ease-in-out forwards;
+  }
+
+  .add-designation-button {
+    padding: 5px;
+  }
+
+}

@@ -1,0 +1,96 @@
+.edit-attendance-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items vertically in the container */
+    flex-wrap: wrap;
+  }
+  
+  .edit-attendance-heading {
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: 600;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #1a1a1a;
+  }
+  
+  .form-group {
+    width: calc(33.33% - 20px);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .form-group:first-child {
+    margin-right: 20px;
+  }
+  
+  .form-group-label {
+    display: block;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 5px;
+  }
+  
+  .form-control {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+  }
+  
+  .date-selection {
+    width: calc(33.33% - 20px); /* Adjust width as necessary */
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .date-select {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+  }
+  
+  .attendance-table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .attendance-select {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+  }
+  
+  .save-button {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  

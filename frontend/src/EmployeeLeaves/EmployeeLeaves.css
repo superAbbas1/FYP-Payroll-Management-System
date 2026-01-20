@@ -1,0 +1,139 @@
+.employee-leave-form-container {
+  margin: 0 auto;
+  color: #111;
+}
+
+.employee-leave-form-container h2 {
+  text-align: center;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+.employee-leave-form-container .form-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 5px;
+}
+
+.employee-leave-form-container .reason {
+  flex: 50%;
+}
+
+.employee-leave-form-container .reason textarea {
+  padding: 10px;
+  box-sizing: border-box;
+  resize: vertical;
+  width: 100%;
+  height: 100px;
+}
+
+.employee-leave-form-container .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333333;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+}
+
+.employee-leave-form-container .dates input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #111;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.employee-leave-form-container .leave-submit-button {}
+
+.employee-leave-form-container .leave-submit-button:hover {}
+
+.leave-requests-list {
+  list-style: none;
+  padding: 0;
+  margin: 30px 0 0 0;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 24px;
+}
+
+.leave-request-item {
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+
+.leave-status-badge {
+  border: 1px solid black;
+  color: black;
+  font-size: 12px;
+  width: fit-content;
+  padding: 4px 16px;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  letter-spacing: 0.04em;
+}
+
+.leave-reason-row {
+  font-size: 14px;
+  color: black;
+  word-break: break-word;
+  padding: 5px 0;
+}
+
+.lower-row-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.leave-dates-row {
+  display: flex;
+  flex-direction: row;
+  color: black;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.leave-date-label {
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.leave-date-value {
+  font-weight: 600;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.leave-delete-button {
+  font-size: 12px;
+  padding: 4px 16px;
+  width: fit-content;
+  border-radius: 16px;
+}
+
+@media screen and (max-width: 786px) {
+  .employee-leave-form-container .form-group {
+    flex-direction: column;
+  }
+  .employee-leave-form-container .dates input {
+    width: 100%;
+  }
+  .leave-delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px 1rem 0;
+  }
+}

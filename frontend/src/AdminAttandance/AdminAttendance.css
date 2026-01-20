@@ -1,0 +1,38 @@
+/* AdminAttendance.css */
+.admin-attendance-container {
+  padding: 20px;
+}
+
+.filter-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.filter-group select {
+  padding: 5px;
+}
+
+.attendance-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.attendance-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.attendance-item p {
+  margin: 5px 0;
+}

@@ -1,0 +1,255 @@
+.employee-list-container {
+  border-radius: 10px;
+  color: #333;
+}
+
+.employee-list-container .headerList {
+  text-align: center;
+  color: #007bff;
+  font-family: 'Arial', sans-serif;
+}
+
+.employee-list-search-container {
+  display: flex;
+  gap: 6px;
+}
+
+.employee-list-container .search-bar,
+.employee-list-container select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.employee-list-container .total {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.employee-list-container .employee-table {
+  width: 100%;
+  text-align: left;
+  border-spacing: 0;
+}
+
+.employee-list-container .employee-table th {
+  padding-bottom: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1a1a1a;
+} 
+
+.employee-list-container .employee-datalist td {
+  padding: 10px 2px;
+}
+
+.employee-list-container .list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.employee-list-container .list-item {
+  background-color: #ffffff;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 5px;
+  color: #333;
+  border: 1px solid #dddddd;
+  transition: all 0.2s ease-in-out;
+}
+
+.employee-list-container .employee-datalist .odd {
+  background-color: #f1f1f1;
+}
+
+.employee-list-container .employee-datalist .even {
+  background-color: #e7e7e7;
+}
+
+.employee-list-container .employee-action-button {
+  color: white;
+  border: none;
+  cursor: pointer;
+  background: none;
+  padding: 0 3px;
+}
+
+.employee-list-container .employee-action-button svg {
+  width: 16px;
+  stroke: black;
+}
+
+
+/* Overlay Styles */
+.edit-employee-overlay,
+.employee-delete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+
+/* Modal Container */
+.edit-employee-modal,
+.employee-delete-modal {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 75%;
+  padding: 20px;
+  position: relative; 
+  height: 90%;
+  overflow-y: auto;
+}
+.employee-delete-modal {
+  width: auto;
+  height: auto;
+  overflow-y: hidden;
+}
+
+
+.edit-employee-modal-content h2 {
+  margin-top: 0;
+}
+.edit-employee-modal h4 {
+  margin-bottom: 2px;
+}
+
+.employee-delete-modal h2 {
+    margin: 0;
+}
+.employee-delete-modal p {
+    margin: 0 0 1rem;
+}
+
+
+
+/* Modal Title */
+.edit-employee-modal-content h2 {
+  margin: 0 0 20px;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  color: black;
+}
+
+/* Row Styles */
+.edit-employee-modal-row {
+  gap: 15px;
+}
+
+/* Label Styles */
+.edit-employee-modal-row label {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+/* Input Styles */
+.edit-employee-modal-row input,
+.edit-employee-modal-row select {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  margin-top: 5px;
+  transition: border-color 0.3s ease-in-out;
+  font-family: inherit;
+}
+
+/* Input Focus Styles */
+.edit-employee-modal-row input:focus,
+.edit-employee-modal-row select:focus {
+  border-color: #007BFF;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Button Styles */
+.edit-employee-modal-save {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-weight: 500;
+  margin-top: 20px;
+  color: black;
+  background-color: transparent;
+  border: 1.5px solid black;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.edit-employee-modal-save:hover {
+  background-color: black;
+  color: white;
+}
+
+.edit-employee-modal-close {
+  background-color: transparent;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid black;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 12px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease-in-out;
+}
+.edit-employee-modal-close svg {
+  width: 100%;
+  color: black;
+  transition: background-color 0.3s;
+}
+
+.edit-employee-modal-close:hover {
+  background-color: black;
+}
+.edit-employee-modal-close svg:hover {
+  stroke: white;
+}
+
+/* employee delete */
+.employee-delete-modal-confirm,
+.employee-delete-modal-cancel {
+  border: 1.5px solid black;
+  padding: 0.5rem 1.7rem;
+  border-radius: 5px;
+  color: white;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  background-color: black;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+.employee-delete-modal-cancel {
+  color: black;
+  background-color: white;
+  border-color: black;
+}
+.employee-delete-modal-confirm:hover {
+  background-color: white;
+  color: black;
+}
+.employee-delete-modal-cancel:hover {
+  background-color: black;
+  color: white;
+}
+
+@media screen and (max-width: 786px) {
+  .employee-list-search-container {
+    flex-direction: column;
+  }
+}

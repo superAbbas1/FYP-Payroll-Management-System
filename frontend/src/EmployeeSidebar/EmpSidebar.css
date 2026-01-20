@@ -1,0 +1,36 @@
+/* Sidebar.css */
+
+
+.sidebar-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  transition: ease-in-out 0.2s;
+}
+
+
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #34495e;
+  border-radius: 10px;
+}
+
+.sidebar-link:hover img{
+  filter: brightness(100%);
+}
+
+.sidebar-menu li:focus-within img,
+.sidebar-menu li .active img {
+  filter: brightness(100%);
+}
+
+
+.sidebar-link:active .icons img{
+  filter: brightness(100%);
+}

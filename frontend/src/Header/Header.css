@@ -1,0 +1,73 @@
+/* Header.css - Optimized with global classes */
+
+.Mainheader {
+  background-color: rgb(43, 43, 43);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+}
+
+.main-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 0.5rem 1.5rem;
+}
+
+.hamburger-button {
+  display: none;
+  cursor: pointer;
+  border-radius: 2px;
+  border: 1px solid white;
+  transition: border 0.2s ease-in-out, color 0.2s ease-in-out;
+  background-color: transparent;
+  padding: 8px 12px;
+}
+
+.hamburger-button:hover {
+  border: 1px solid white; 
+  background-color: transparent;
+  color: white;
+}
+
+.Mainheader img{
+  width: 100%;
+} 
+
+.Mainheader .header-heading {
+  margin: 0;
+  font-size: 2rem; 
+  text-align: center;
+  color: white;
+}
+
+.header-logo-container {
+  max-width: 100px;
+}
+
+.logout-button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease, color 0.2s ease-in-out;
+}
+
+.logout-button:hover {
+  background-color: white;
+  color: black;
+}
+
+@media screen and (max-width: 786px) {
+  .hamburger-button{
+    display: block;
+  }
+  .Mainheader .header-heading {
+    display: none;
+  }
+}
