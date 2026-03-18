@@ -324,6 +324,7 @@ exports.updateEmployee = async (req, res) => {
 exports.getEmployeesList = async (req, res) => {
   try {
     const { year, month, department, designation } = req.query;
+    console.log('Received request for employees list with filters:', { year, month, department, designation });
     let query = {};
 
     if (department) {
@@ -335,6 +336,7 @@ exports.getEmployeesList = async (req, res) => {
     if (year && month) {
       query['attendance.month'] = month;
     }
+    
 
     const employees = await User.find(query);
     res.json(employees);

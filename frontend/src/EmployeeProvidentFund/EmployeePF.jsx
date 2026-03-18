@@ -45,6 +45,7 @@ const EmployeePF = () => {
         <label htmlFor="year">Selected Year:</label>
         <DatePicker
           id='date-picker'
+          className='date-picker'
           selected={selectedYear}
           onChange={handleYearChange}
           dateFormat="yyyy"

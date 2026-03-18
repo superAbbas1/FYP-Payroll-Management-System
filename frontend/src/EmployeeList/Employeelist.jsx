@@ -29,8 +29,9 @@ const EmployeeList = () => {
 
   useEffect(() => {
     // Update designations based on selected department
-    // const department = departments.find(dept => dept.name === selectedDepartment);
-    // setDesignations(department ? department.designations : []);
+    fetchDepartments();
+    const department = departments.find(dept => dept.name === selectedDepartment);
+    setDesignations(department ? department.designations : []);
   }, [selectedDepartment, departments]);
 
   const fetchDepartments = async () => {
@@ -150,13 +151,13 @@ const EmployeeList = () => {
       <div className="employee-list-search-container">
         <input
           type="text"
-          className="search-bar"
+          className="date-picker"
           placeholder="Search employees"
           value={searchQuery}
           onChange={handleSearch}
         />
         <select
-          className="department-filter"
+          className="date-picker"
           value={selectedDepartment}
           onChange={handleDepartmentChange}
         >
@@ -166,7 +167,7 @@ const EmployeeList = () => {
           ))}
         </select>
         <select
-          className="designation-filter"
+          className="date-picker"
           value={selectedDesignation}
           onChange={handleDesignationChange}
           disabled={!selectedDepartment}

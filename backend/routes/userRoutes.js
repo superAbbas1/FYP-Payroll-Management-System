@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
+//getting employee name using his dept and designation
+// router.get('/employeeslist', userController.getEmployeesList);
+// router.get('/departments', userController.getDepartments);
+
 // Authentication routes
 router.post('/register', userController.registerEmployee);
 router.post('/login', userController.loginUser);

@@ -102,7 +102,7 @@ const EmployeeLeaves = () => {
       <ul className="leave-requests-list">
         {(Array.isArray(leaveRequests) ? leaveRequests : []).map((request) => (
           <li key={request._id} className="leave-request-item">
-            <span className="leave-status-badge">{request.status}</span>
+           <span className="leave-status-badge">Status: {request.status}</span>
             <div className="leave-reason-row">{request.subject}</div>
             <div className='lower-row-wrapper'>
               <div className="leave-dates-row">

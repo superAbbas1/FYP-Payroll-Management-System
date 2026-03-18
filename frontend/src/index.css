@@ -423,7 +423,7 @@ option {
 
 /* dates */
 
-#date-picker {
+.date-picker {
   padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -431,7 +431,7 @@ option {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-#date-picker:focus {
+.date-picker:focus {
   border-color: black;
   box-shadow: 0 0 5px rgba(0,0,0,0);
 }

@@ -14,7 +14,7 @@
   gap: 6px;
 }
 
-.employee-list-container .search-bar,
+/* .employee-list-container .search-bar,
 .employee-list-container select {
   width: 100%;
   padding: 10px;
@@ -22,7 +22,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-}
+} */
 
 .employee-list-container .total {
   font-size: 18px;

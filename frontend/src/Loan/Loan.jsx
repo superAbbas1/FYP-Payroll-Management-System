@@ -53,7 +53,8 @@ const Loan = () => {
               <button className="btn btn-secondary" onClick={() => handleStatusChange(loan.amount ,loan._id, 'Declined')} disabled={loan.status !== 'Pending'}>
                 Decline
               </button>
-              <button className="delete-button close-button" onClick={() => handleDelete(loan._id)}>
+              <button className="btn btn-danger" onClick={() => handleDelete(loan._id)}>
+                Delete
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>

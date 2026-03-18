@@ -72,6 +72,7 @@ const EmployeeAttendance = () => {
         <label htmlFor="date-picker">Select Month:</label>
         <DatePicker
           id="date-picker"
+          className='date-picker'
           selected={selectedDate}
           onChange={fetchAttendance}
           dateFormat="MMMM yyyy"
