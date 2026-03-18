@@ -97,7 +97,7 @@ const EmployeeLeaves = () => {
           <button className='btn btn-primary' type="submit">Submit</button>
         </div>
       </form>
-      <h3>Your Leave Requests</h3>
+      <h3>Your Leave Requests appear below:</h3>
 
       <ul className="leave-requests-list">
         {(Array.isArray(leaveRequests) ? leaveRequests : []).map((request) => (

@@ -18,33 +18,33 @@ const EmployeeList = () => {
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
 
-
   useEffect(() => {
     // Fetch employees
-    axios.get("http://localhost:5000/employeeslist")
+    axios.get("http://localhost:5000/api/employeeslist")
       .then((res) => {
         setEmployees(res.data);
-        console.log("Fetched employees:", res.data); // Log the fetched employees data
-      })
-      .catch((err) => console.log(err));
-
-    // Fetch departments
-    axios.get("http://localhost:5000/api/departments")
-      .then((res) => {
-        setDepartments(res.data);
-        console.log("Fetched departments:", res.data); // Log the fetched departments data
       })
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
     // Update designations based on selected department
-    const department = departments.find(dept => dept.name === selectedDepartment);
-    setDesignations(department ? department.designations : []);
+    // const department = departments.find(dept => dept.name === selectedDepartment);
+    // setDesignations(department ? department.designations : []);
   }, [selectedDepartment, departments]);
 
+  const fetchDepartments = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/departments");
+      const deptData = res.data;
+      setDepartments(deptData);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+    }
+  };
+
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:5000/employees/${id}`)
+    axios.delete(`http://localhost:5000/api/employees/${id}`)
       .then(() => {
         setEmployees(employees.filter(employee => employee._id !== id));
       })
@@ -56,8 +56,8 @@ const EmployeeList = () => {
 
   const handleEdit = (employee) => {
     setSelectedEmployee(employee);
+    fetchDepartments();
     setIsModalOpen(true);
-    console.log(`Edit employee with id: ${employee._id}`);
   };
 
   const closeModal = () => {
@@ -67,7 +67,6 @@ const EmployeeList = () => {
   const handleView = (employee) => {
     setSelectedEmployee(employee);
     setIsViewModalOpen(true);
-    console.log(`View employee with id: ${employee._id}`);
   };
 
   const closeViewModal = () => {
@@ -81,14 +80,12 @@ const EmployeeList = () => {
 
   const handleDepartmentChange = (event) => {
     setSelectedDepartment(event.target.value);
-    setSelectedDesignation(""); // Reset designation when department changes
+    setSelectedDesignation("");
   };
 
   const handleDesignationChange = (event) => {
     setSelectedDesignation(event.target.value);
   };
-
-
 
   const openConfirmDelete = (employee) => {
     setEmployeeToDelete(employee);
@@ -108,8 +105,6 @@ const EmployeeList = () => {
   };
 
 
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSelectedEmployee(prevState => ({
@@ -124,11 +119,9 @@ const EmployeeList = () => {
       return;
     }
 
-
     const employeeId = selectedEmployee._id;
-    console.log(`Saving employee with id: ${employeeId}`); // Log the employee ID being saved
 
-    axios.put(`http://localhost:5000/employees/${employeeId}`, selectedEmployee)
+    axios.put(`http://localhost:5000/api/employees/${employeeId}`, selectedEmployee)
       .then((res) => {
         setEmployees(employees.map(emp => (emp._id === selectedEmployee._id ? res.data : emp)));
         closeModal();
@@ -243,7 +236,6 @@ const EmployeeList = () => {
         </Modal>
       )}
 
-
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -295,8 +287,13 @@ const EmployeeList = () => {
               <label>
                 Department:
                 <select name="department" value={selectedEmployee.department} onChange={handleChange}>
-                  {departments.map(department => (
-                    <option key={department._id} value={department.name}>{department.name}</option>
+                  {departments.map((dept) => (
+                    <option
+                      key={dept._id}
+                      value={dept.name}
+                    >
+                      {dept.name}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -305,20 +302,21 @@ const EmployeeList = () => {
                 <select name="designation" value={selectedEmployee.designation} onChange={handleChange}>
                   {departments
                     .find(dept => dept.name === selectedEmployee.department)
-                    ?.designations
-                    .map(designation => (
-                      <option key={designation} value={designation}>{designation}</option>
+                    ?.designations.map((desig, index) => (
+                      <option key={index} value={desig}>
+                        {desig}
+                      </option>
                     ))}
                 </select>
               </label>
 
               <label>
                 Status:
-                <input type="text" name="bankName" value={selectedEmployee.status} onChange={handleChange} />
+                <input type="text" name="status" value={selectedEmployee.status} onChange={handleChange} />
               </label>
               <label>
                 Joining Date
-                <input type="date" name="bankName" value={selectedEmployee.joining} onChange={handleChange} />
+                <input type="date" name="joining" value={selectedEmployee.joining} onChange={handleChange} />
               </label>
             </div>
 
@@ -340,11 +338,9 @@ const EmployeeList = () => {
               </label>
             </div>
 
-            <button className="edit-employee-modal-save" onClick={handleSave}>Save</button>
-            <button className="edit-employee-modal-close" onClick={closeModal}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
+            <button className="btn btn-success" onClick={handleSave}>Save</button>
+            <button className="btn btn-primary" onClick={closeModal}>
+              Cancel
             </button>
           </div>
         )}

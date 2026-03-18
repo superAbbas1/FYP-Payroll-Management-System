@@ -87,14 +87,6 @@
   font-style: italic;
 }
 
-.available-years {
-  text-align: center;
-  padding: 5px;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #333;
-}
-
 @media screen and (max-width: 600px) {
   .provident-funds-container .filter-container {
     flex-direction: column;

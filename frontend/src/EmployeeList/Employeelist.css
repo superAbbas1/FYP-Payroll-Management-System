@@ -146,6 +146,7 @@
 /* Row Styles */
 .edit-employee-modal-row {
   gap: 15px;
+  margin: 5px 0;
 }
 
 /* Label Styles */
@@ -174,78 +175,6 @@
   border-color: #007BFF;
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-}
-
-/* Button Styles */
-.edit-employee-modal-save {
-  padding: 10px 15px;
-  cursor: pointer;
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
-  font-weight: 500;
-  margin-top: 20px;
-  color: black;
-  background-color: transparent;
-  border: 1.5px solid black;
-  border-radius: 5px;
-  transition: all 0.2s ease-in-out;
-}
-
-.edit-employee-modal-save:hover {
-  background-color: black;
-  color: white;
-}
-
-.edit-employee-modal-close {
-  background-color: transparent;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 1px solid black;
-  padding: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 12px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.2s ease-in-out;
-}
-.edit-employee-modal-close svg {
-  width: 100%;
-  color: black;
-  transition: background-color 0.3s;
-}
-
-.edit-employee-modal-close:hover {
-  background-color: black;
-}
-.edit-employee-modal-close svg:hover {
-  stroke: white;
-}
-
-/* employee delete */
-.employee-delete-modal-confirm,
-.employee-delete-modal-cancel {
-  border: 1.5px solid black;
-  padding: 0.5rem 1.7rem;
-  border-radius: 5px;
-  color: white;
-  margin-right: 0.5rem;
-  cursor: pointer;
-  background-color: black;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-}
-.employee-delete-modal-cancel {
-  color: black;
-  background-color: white;
-  border-color: black;
-}
-.employee-delete-modal-confirm:hover {
-  background-color: white;
-  color: black;
-}
-.employee-delete-modal-cancel:hover {
-  background-color: black;
-  color: white;
 }
 
 @media screen and (max-width: 786px) {

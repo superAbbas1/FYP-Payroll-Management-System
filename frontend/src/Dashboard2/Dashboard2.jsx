@@ -54,7 +54,7 @@ const Dashboard2 = () => {
       const response = await fetch(`http://localhost:5000/api/employees/${employeeId}`);
       const employee = await response.json();
 
-      const decryptedPassword = AES.decrypt(employee.password, "bsjdsab12bsandb213").toString(Utf8);
+      const decryptedPassword = AES.decrypt(employee, "bsjdsab12bsandb213").toString(Utf8);
 
       if (decryptedPassword !== currentPassword) {
         alert("Your current password is incorrect. Please try again.");
@@ -82,7 +82,7 @@ const Dashboard2 = () => {
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      alert("An error occurred. Please try again.");
+      // alert("An error occurred. Please try again.");
     }
   };
 

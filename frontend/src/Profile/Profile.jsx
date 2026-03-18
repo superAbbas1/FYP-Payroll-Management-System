@@ -9,11 +9,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        console.log('Fetching data for employee ID:', employeeID);
         const response = await fetch(`http://localhost:5000/api/user/${employeeID}`);
         const data = await response.json();
 
-        console.log('Fetched user data:', data);
         setUserData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);

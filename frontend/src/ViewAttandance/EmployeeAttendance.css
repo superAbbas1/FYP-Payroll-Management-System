@@ -16,19 +16,6 @@
   font-size: clamp(0.85rem, 1.3vw, 1rem);
 }
 
-.attendance-report-container .filters input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.attendance-report-container .filters input:focus {
-  border-color: black;
-  box-shadow: 0 0 5px rgba(0,0,0,0);
-}
-
 .attendance-report-container .attendance-table {
   width: 100%;
   border-collapse: collapse;

@@ -16,7 +16,7 @@ const Dashboard3 = () => {
         // Fetch the number of employees
         const fetchEmployees = async () => {
             try {
-                const response = await fetch('http://localhost:5000/employeeslist');
+                const response = await fetch('http://localhost:5000/api/employeeslist');
                 const employees = await response.json();
                 setEmployeeCount(employees.length);
             } catch (error) {

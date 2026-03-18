@@ -7,6 +7,8 @@ const EmpLoan = ({ employeeID }) => {
   const [totalProvidentFund, setTotalProvidentFund] = useState(0);
   const [loanHistory, setLoanHistory] = useState([]);
   const [loanRequests, setLoanRequests] = useState([]);
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
   employeeID = localStorage.getItem('employeeId');
 
@@ -28,6 +30,7 @@ const EmpLoan = ({ employeeID }) => {
     const fetchProvidentFundDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/provident-fund/${employeeID}`);
+        console.log("Providentrttttt Fund Details:", response.data);
         setTotalProvidentFund(response.data.totalProvidentFund);
         setLoanHistory(response.data.loanHistory);
       } catch (error) {
@@ -39,8 +42,21 @@ const EmpLoan = ({ employeeID }) => {
   }, [employeeID]);
 
   const handleLoanRequest = async () => {
+    if (!loanAmount || parseInt(loanAmount) < 1) {
+      setMessage("Loan amount must be above 0 PKR");
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 5000);
+      return;
+    }
+
     if (parseInt(loanAmount) > totalProvidentFund) {
-      alert("Your provident funds balance is not sufficient");
+      setMessage("Your provident funds balance is not sufficient");
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 5000);
       return;
     }
 
@@ -72,6 +88,13 @@ const EmpLoan = ({ employeeID }) => {
 
   return (
     <div className="emp-loan-container">
+      {showMessage && (
+        <div className="message-notification">
+          <div className="message-content">
+            <p>{message}</p>
+          </div>
+        </div>
+      )}
       <h2>Request Loan</h2>
       <p>Total Provident Fund Balance: {totalProvidentFund} PKR</p>
       <div className="loan-request-section">
@@ -80,8 +103,10 @@ const EmpLoan = ({ employeeID }) => {
           placeholder="Enter loan amount"
           value={loanAmount}
           onChange={(e) => setLoanAmount(e.target.value)}
+          min="1"
+          step="1"
         />
-        <button className='main-button' onClick={handleLoanRequest}>Get</button>
+        <button className='btn btn-primary' onClick={handleLoanRequest}>Get</button>
       </div>
 
       <h3>Loan History</h3>
@@ -99,13 +124,13 @@ const EmpLoan = ({ employeeID }) => {
             <tr key={request._id}>
               <td>{request.amount}</td>
               <td>{new Date(request.date).toLocaleDateString()}</td>
-              <td className='hide-in-mobile-table '>{request.status}</td>
+              <td className='hide-in-mobile-table'><span className={`btn ${request.status === 'Approved' ? 'btn-success' : request.status === 'Declined' ? 'btn-danger' : 'btn-warning'}`}>{request.status}</span></td>
               <td>
                 <button className='btn btn-primary' onClick={() => handleDeleteRequest(request._id, employeeID)}> Delete
                 </button>
               </td>
               <td className='view-in-mobile-only-table pf-loan-status-icon'>
-                  <span className='pf-loan-status'><strong>Status:</strong>{request.approved ? 'Approved' : 'Pending'}</span>
+                  <span className='pf-loan-status'><strong>Status:</strong>{request.status}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                           <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                         </svg>

@@ -75,3 +75,64 @@
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }
+
+.message-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 400px;
+  animation: slideIn 0.4s ease-in-out forwards;
+  z-index: 9999;
+}
+
+.message-notification.hide {
+  animation: slideOut 0.4s ease-in-out forwards;
+}
+
+.message-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.message-content p {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+}
+
+@media (max-width: 768px) {
+  .message-notification {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}

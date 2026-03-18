@@ -34,13 +34,11 @@ const ViewSalary = () => {
     const fetchDesignations = async () => {
       if (!selectedDepartment) return;
 
-      console.log(`Fetching designations for department ID: ${selectedDepartment}`);
 
       try {
         const response = await axios.get(
           `http://localhost:5000/api/departments/${selectedDepartment}/designations`
         );
-        console.log('Designations fetched:', response.data);
         setDesignations(response.data);
       } catch (error) {
         console.error('Failed to fetch designations:', error);
@@ -82,7 +80,6 @@ const ViewSalary = () => {
   // Fetch salary records for a specific employee
   const fetchSalaryRecords = async (employeeId) => {
     try {
-      console.log(`Fetching salary records for employee ID: ${employeeId}`);
       const response = await fetch(`http://localhost:5000/api/employees/${employeeId}/salaries`);
 
       if (!response.ok) {
@@ -91,7 +88,6 @@ const ViewSalary = () => {
       }
 
       const data = await response.json();
-      console.log('Salary records fetched:', data); // Log fetched data
       setSalaryRecords(data);
     } catch (error) {
       console.error('Error fetching salary records:', error);

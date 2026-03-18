@@ -91,7 +91,6 @@ const Registration = () => {
   ];
 
   const handleSubmit = (e) => {
-    console.log('password in frontend: ', password);
     e.preventDefault();
 
     if (!fname || !lname || !email || !cnic || !department || !designation || !city || !phoneNum || !password || !joining || !cnic || !address || !salary || !status) {
@@ -110,7 +109,7 @@ const Registration = () => {
     }
 
     axios
-      .post("http://localhost:5000/register", {
+      .post("http://localhost:5000/api/register", {
         fname,
         lname,
         department,

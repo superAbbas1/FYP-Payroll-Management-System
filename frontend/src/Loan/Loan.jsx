@@ -21,7 +21,7 @@ const Loan = () => {
         setLoanRequests(loanRequests.map(loan =>
           loan._id === id ? { ...loan, status } : loan
         ));
-      })
+      }) 
       .catch(error => console.error(`Error updating Loan Request to ${status}: `, error));
   };
 
@@ -47,10 +47,10 @@ const Loan = () => {
             <p><strong>Loan Date:</strong> {new Date(loan.loanDate).toLocaleDateString()}</p>
             <p><strong>Status:</strong> {loan.status}</p>
             <div className="loan-actions">
-              <button className="main-button" onClick={() => handleStatusChange(loan.loanAmount ,loan._id, 'Approved')} disabled={loan.status !== 'pending'}>
+              <button className="btn btn-primary" onClick={() => handleStatusChange(loan.loanAmount ,loan._id, 'Approved')} disabled={loan.status !== 'Pending'}>
                 Approve
               </button>
-              <button className="main-button-2" onClick={() => handleStatusChange(loan.amount ,loan._id, 'Declined')} disabled={loan.status !== 'pending'}>
+              <button className="btn btn-secondary" onClick={() => handleStatusChange(loan.amount ,loan._id, 'Declined')} disabled={loan.status !== 'Pending'}>
                 Decline
               </button>
               <button className="delete-button close-button" onClick={() => handleDelete(loan._id)}>

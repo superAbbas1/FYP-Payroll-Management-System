@@ -53,6 +53,7 @@ const MarkAttendance = () => {
       }
 
       const today = new Date().toISOString().split('T')[0];
+      console.log('Marking attendance for employee:', employeeId, 'on date:', today);
 
       const response = await fetch('http://localhost:5000/api/attendance', {
         method: 'POST',
@@ -65,6 +66,7 @@ const MarkAttendance = () => {
           status: 'Present'
         })
       });
+      console.log('Response status:', response);
 
       const data = await response.json();
 

@@ -8,7 +8,6 @@ const EmployeePF = () => {
   const [selectedYear, setSelectedYear] = useState(new Date());
   const [providentFundData, setProvidentFundData] = useState([]);
   const [totalProvidentFundBalance, setTotalProvidentFundBalance] = useState(0);
-  const [availableYears, setAvailableYears] = useState([]);
 
   const employeeID = localStorage.getItem('employeeId');
 
@@ -20,15 +19,6 @@ const EmployeePF = () => {
         setProvidentFundData(response.data.providentFundHistory);
         setTotalProvidentFundBalance(response.data.totalProvidentFundBalance);
         
-        // Extract available years from all PF data
-        if (response.data.providentFundHistory && response.data.providentFundHistory.length > 0) {
-          const years = new Set();
-          response.data.providentFundHistory.forEach(entry => {
-            const yearFromEntry = entry.month.split(' ')[1];
-            years.add(yearFromEntry);
-          });
-          setAvailableYears(Array.from(years).sort());
-        }
       } catch (error) {
         console.error('Error fetching provident fund data:', error);
       }
@@ -54,7 +44,7 @@ const EmployeePF = () => {
       <div className="filter-container">
         <label htmlFor="year">Selected Year:</label>
         <DatePicker
-          id='employee-pf-date-picker'
+          id='date-picker'
           selected={selectedYear}
           onChange={handleYearChange}
           dateFormat="yyyy"
@@ -88,12 +78,6 @@ const EmployeePF = () => {
       )}
       {selectedYear && providentFundData.length === 0 && (
         <p className="no-data-message">No provident fund data found for {selectedYear.getFullYear()}.</p>
-      )}
-      
-      {availableYears.length > 0 && (
-        <div className="available-years">
-          <p><strong>Available Years:</strong> {availableYears.join(', ')}</p>
-        </div>
       )}
     </div>
   );

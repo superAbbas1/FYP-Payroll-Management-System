@@ -29,7 +29,7 @@ const Login = () => {
 
     setTimeout(async () => {
       try {
-        const response = await axios.post("http://localhost:5000/login", {
+        const response = await axios.post("http://localhost:5000/api/login", {
           email,
           password,
         }); 
@@ -63,7 +63,7 @@ const Login = () => {
   const handleForgotPasswordSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/forgot-password", { email })
+      .post("http://localhost:5000/api/forgot-password", { email })
       .then((res) => {
         alert("Your password has been sent to your email");
         setShowForgotPassword(false);

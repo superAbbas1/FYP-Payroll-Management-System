@@ -269,6 +269,10 @@ option {
   text-decoration: none;
 }
 
+.btn:active{
+  transform: scale(0.95);
+}
+
 /* Primary Button - Dark/Black */
 .btn-primary {
   background-color: #000000;
@@ -417,7 +421,20 @@ option {
 }
 
 
+/* dates */
 
+#date-picker {
+  padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#date-picker:focus {
+  border-color: black;
+  box-shadow: 0 0 5px rgba(0,0,0,0);
+}
 
 @media screen and (max-width: 786px) {
   .hide-in-mobile-table {
