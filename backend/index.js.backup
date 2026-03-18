@@ -1,0 +1,1288 @@
+const express = require('express');
+const cors = require('cors');
+const cron = require('node-cron');
+
+const crypto = require("crypto-js");
+
+
+const User = require('./db/User');
+const Department = require('./db/Department')
+const SalaryRecord = require("./db/Salary");
+const nodemailer = require('nodemailer');
+const AttendanceHistory = require("./db/Attendance");
+const LeaveRequest = require("./db/LeaveRequest");
+const LoanRequest = require('./db/LoanRequests');
+const providentFundRoutes = require('./db/User');
+const loanRequestRoutes = require('./db/User');
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+
+
+app.get('/api/employees/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) return res.status(404).send('User not found');
+    res.json(user);
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
+
+app.put('/api/employees/:id/updatePassword', async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.send('Password updated successfully');
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+app.post('/api/users/:id/validate-password', async (req, res) => {
+  const { currentPassword } = req.body;
+
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).send('User not found');
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return res.status(401).send('Incorrect password');
+
+    res.send('Password is valid');
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+
+
+app.get('/api/loans', async (req, res) => {
+  try {
+    const loanRequests = await LoanRequest.find();
+    res.json(loanRequests);
+  } catch (error) {
+    res.status(500).send('Server Error');
+  }
+});
+
+
+// Update loan request status
+app.put('/api/loans/:id', async (req, res) => {
+  try {
+    const { amount, status, id } = req.body;
+
+    await LoanRequest.findByIdAndUpdate(req.params.id, { status });
+
+    const user = await User.findOne({ 'loanHistory._id': id });
+    const loan = user.loanHistory.find(lh => lh._id.toString() === id);
+    if (loan) {
+      loan.status = status;
+      user.providentFund.balance = user.providentFund.balance - amount;
+      await user.save();
+      res.status(200).json({ message: `Loan Rwquest ${status} successfully` });
+    } else {
+      res.status(500).json({ message: `User not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Failed to update the loan request status `, error: error.message });
+  }
+});
+
+
+
+app.post('/api/leaves', async (req, res) => {
+  try {
+    const { employeeId, subject, startDate, endDate, status } = req.body;
+    if (new Date(startDate) > new Date(endDate)) {
+      return res.status(400).json({ message: 'Starting date must be before the ending date' });
+    }
+    const user = await User.findById(employeeId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const newLeaveRequest = new LeaveRequest({
+      employeeId: user.employeeID,
+      employeeName: `${user.fname} ${user.lname}`,
+      subject,
+      startDate,
+      endDate,
+      status,
+    });
+
+    const savedLeaveRequest = await newLeaveRequest.save();
+
+    user.leaveRequestsHistory.push({
+      _id: savedLeaveRequest._id,
+      subject,
+      startDate,
+      endDate,
+      status
+    });
+    await user.save();
+    res.status(201).json({ ...savedLeaveRequest.toObject(), employeeID: user.employeeID });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to submit leave request', error: error.message });
+  }
+});
+
+
+
+app.get('/api/leaves', async (req, res) => {
+  try {
+    const leaveRequests = await LeaveRequest.find();
+    res.status(200).json(leaveRequests);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch leave requests', error: error.message });
+  }
+});
+
+app.get('/api/leaves/:employeeId', async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const user = await User.findById(employeeId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      leaveRequestsHistory: user.leaveRequestsHistory
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching leave requests' });
+  }
+});
+
+app.put('/api/leaves/:id', async (req, res) => {
+  try {
+    const { status, id } = req.body;
+    const user = await User.findOne({ 'leaveRequestsHistory._id': id });
+    await LeaveRequest.findByIdAndUpdate(req.params.id, { status });
+    const leave = user.leaveRequestsHistory.find(lr => lr._id.toString() === id);
+    if (leave) {
+      leave.status = status;
+      await user.save();
+      res.status(200).json({ message: `Leave request ${status.toLowerCase()} successfully` });
+    } else {
+      res.status(404).json({ message: 'Leave request not found in user history' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Failed to update leave request status`, error: error.message });
+  }
+});
+
+app.delete('/api/leaves/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { employeeId } = req.body;
+    const user = await User.findById(employeeId);
+    const index = await user.leaveRequestsHistory.findIndex(
+      (leave) => leave._id.toString() === id
+    );
+    if (index !== -1) {
+      user.leaveRequestsHistory.splice(index, 1);
+      await user.save();
+      res.status(200).json({ message: 'Leave request deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Leave request not found or does not belong to this employee' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete leave request', error: error.message });
+  }
+});
+
+app.delete('/api/admin-leaves/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    res.status(200).json({ message: 'Leave request deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete leave request', error: error.message });
+  }
+});
+
+
+
+app.get('/api/user/:employeeID', async (req, res) => {
+  const { employeeID } = req.params;
+  try {
+    // First try to find by MongoDB _id, if that fails, find by employeeID
+    let user = await User.findById(employeeID);
+    
+    if (!user) {
+      user = await User.findOne({ employeeID: employeeID });
+    }
+    
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found.' });
+    }
+    res.status(200).json({
+      fname: user.fname,
+      lname: user.lname,
+      department: user.department,
+      designation: user.designation,
+      city: user.city,
+      phoneNum: user.phoneNum,
+      bankName: user.bankName,
+      accountName: user.accountName,
+      accountNum: user.accountNum,
+      cnic: user.cnic,
+      joining: user.joining,
+      address: user.address,
+      email: user.email,
+      status: user.status
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user information.' });
+  }
+});
+
+
+
+app.get('/api/user/salary/:employeeID', async (req, res) => {
+  const { employeeID } = req.params;
+  try {
+    const user = await User.findById(employeeID);
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found.' });
+    }
+
+
+    res.status(200).json({ salary: user.salary });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch Salary information.' });
+  }
+});
+
+
+
+
+
+app.get('/api/attendance', async (req, res) => {
+  try {
+    const attendanceRecords = await User.find({}, 'employeeID fname lname department designation attendance');
+
+    res.json(attendanceRecords);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch attendance' });
+  }
+});
+
+app.get('/api/employee-attendance-today', async (req, res) => {
+  const { employeeId, date } = req.query;
+  try {
+    const user = await User.findById(employeeId);
+    const targetEmployee = user.employeeID;
+    const targetAttendance = await AttendanceHistory.findOne({
+      employeeId: targetEmployee,
+      date: date
+    });
+    if (date === targetAttendance.date) {
+      res.status(200).json({
+        message: `Attendance is registered for date: ${date}`,
+        attendanceMarked: true,
+        status: targetAttendance.status
+      })
+    }
+    else {
+      res.status(200).json({
+        message: `Attendance is not registered yet for date: ${date}`,
+        attendanceMarked: false
+      })
+    }
+  }
+  catch {
+    res.status(500).json({ error: 'Failed to fetch attendance' });
+  }
+});
+
+
+
+
+
+
+app.post('/api/attendance', async (req, res) => {
+  try {
+    const { employeeId, date, status } = req.body;
+
+    const parsedDate = new Date(date);
+    const formattedDate = parsedDate.toISOString().slice(0, 10);
+    const year = parsedDate.getFullYear();
+    const month = parsedDate.getMonth() + 1;
+    const user = await User.findById(employeeId);
+
+
+    const newAttendance = new AttendanceHistory({
+      employeeId: user.employeeID,
+      date: formattedDate,
+      status: status,
+      year,
+      month
+    });
+
+
+    const savedAttendance = await newAttendance.save();
+    res.status(200).json({ message: 'Attendance marked successfully', attendance: savedAttendance });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to mark attendance', error: error.message });
+  }
+});
+
+
+
+app.get('/api/attendance/:employeeId', async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const { targetYear, targetMonth } = req.query;
+
+    const user = await User.findById(employeeId);
+    const targetUser = user.employeeID;
+
+    const targetAttendanceRecord = await AttendanceHistory.find({
+      employeeId: targetUser,
+      month: targetMonth,
+      year: targetYear
+    });
+
+    if (targetAttendanceRecord) {
+      console.log("okayyyy");
+      return res.status(200).json(targetAttendanceRecord);
+    }
+    else {
+      return res.status(200).json({ message: "not found" });
+    }
+
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch attendance records', error: error.message });
+  }
+});
+
+
+app.get('/api/adminattendance/:employeeId', async (req, res) => {
+  const { employeeId } = req.params;
+  const { month, year } = req.query;
+
+  console.log('Fetching attendance for employee:', employeeId, 'Month:', month, 'Year:', year); 
+
+  try {
+
+    const targetEmployee = await User.findById(employeeId);
+    const targetEmployeeId = targetEmployee.employeeID
+
+    const records = await AttendanceHistory.find({
+      employeeId: targetEmployeeId,
+      month: month ? parseInt(month, 10) : undefined,
+      year: year ? parseInt(year, 10) : undefined
+    });
+
+    res.json({ attendanceRecords: records });
+  } catch (error) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// Helper function to generate PF history for all months from joining date
+const generateProvidentFundHistory = (joiningDate, salaryHistory) => {
+  const pfHistory = [];
+  
+  // Parse joining date
+  const joining = new Date(joiningDate);
+  const joinYear = joining.getFullYear();
+  const joinMonth = joining.getMonth();
+  
+  // Current date
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+  
+  // Generate months from joining date to current month
+  let date = new Date(joinYear, joinMonth);
+  
+  while (date <= today) {
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    const monthYear = `${month} ${year}`;
+    
+    // Find salary for this month
+    let monthlySalary = 0;
+    for (let i = salaryHistory.length - 1; i >= 0; i--) {
+      const histEntry = salaryHistory[i];
+      const [histMonth, histYear] = histEntry.month.split(' ');
+      const histDate = new Date(`${histMonth} 1, ${histYear}`);
+      
+      if (histDate <= date) {
+        monthlySalary = parseFloat(histEntry.salary);
+        break;
+      }
+    }
+    
+    // Calculate 10% PF
+    const pfAmount = monthlySalary * 0.1;
+    
+    // Check if this month already exists in pfHistory
+    const existingIndex = pfHistory.findIndex(entry => entry.month === monthYear);
+    if (existingIndex === -1) {
+      pfHistory.push({
+        month: monthYear,
+        amount: pfAmount
+      });
+    }
+    
+    // Move to next month
+    date.setMonth(date.getMonth() + 1);
+  }
+  
+  return pfHistory;
+};
+
+app.post('/api/salary', async (req, res) => {
+  const { employeeID, salary } = req.body;
+
+  if (!employeeID || !salary) {
+    return res.status(400).json({ error: 'Employee ID and salary are required.' });
+  }
+  try {
+    const user = await User.findById(employeeID);
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found.' });
+    }
+    const nextMonth = new Date(new Date().setMonth(new Date().getMonth() + 1))
+      .toLocaleString('default', { month: 'long' });
+    const currentYear = new Date().getFullYear();
+    const existingEntryIndex = user.salaryHistory.findIndex(entry => entry.month === nextMonth);
+
+    if (existingEntryIndex !== -1) {
+      user.salaryHistory[existingEntryIndex].salary = salary;
+    } else {
+      user.salaryHistory.push({ salary: salary, month: `${nextMonth} ${currentYear}` });
+    }
+    user.salary = salary;
+    
+    // Regenerate PF history with new salary
+    user.providentFund.history = generateProvidentFundHistory(user.joining, user.salaryHistory);
+    
+    // Recalculate total balance
+    user.providentFund.balance = user.providentFund.history.reduce((sum, entry) => sum + entry.amount, 0);
+    
+    await user.save();
+    res.status(200).json({
+      message: `Salary updated to ${salary} successfully for ${nextMonth}. Provident fund recalculated.`,
+      user
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update salary' });
+  }
+});
+
+
+
+app.get('/api/salary/:employeeId', async (req, res) => {
+  const { employeeId } = req.params;
+  try {
+    const user = await User.findById(employeeId);
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found.' });
+    }
+    res.json({ salary: user.salary });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch salary' });
+  }
+});
+
+
+
+app.get('/api/salary/changes/:employeeId', async (req, res) => {
+  const { employeeId } = req.params;
+
+  try {
+    const salaryRecord = await SalaryRecord.findOne({ employeeId });
+
+    if (!salaryRecord) {
+      return res.status(404).json({ error: 'Salary record not found.' });
+    }
+
+    res.json({ salaryChanges: salaryRecord.history });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch salary change history' });
+  }
+});
+
+
+
+
+// Get all salary records for an employee
+app.get('/api/employees/:employeeId/salaries', async (req, res) => {
+  const { employeeId } = req.params;
+
+  try {
+    const user = await User.findById(employeeId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    const salaryRecords = user.salaryHistory;
+
+    if (!salaryRecords || salaryRecords.length === 0) {
+      return res.status(404).json({ error: 'No salary records found' });
+    }
+
+    res.json(salaryRecords);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch salary records' });
+  }
+});
+
+
+
+
+// Email configuration
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  port: 587,
+  secure: false,
+  auth: {
+    user: 'abbasmansoor456@gmail.com',
+    pass: 'piyt nnxe xuux lwzb'
+  }
+});
+
+
+
+
+
+// Registration API
+
+
+app.post("/register", async (req, res) => {
+  try {
+    // Check if email already exists
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+
+    // Check if CNIC already exists
+    const existingCnic = await User.findOne({ cnic: req.body.cnic });
+    if (existingCnic) {
+      return res.status(400).json({ error: "CNIC already in use" });
+    }
+
+    // Get department name from ID
+    const department = await Department.findById(req.body.department);
+    if (!department) {
+      return res.status(400).json({ error: "Invalid department ID" });
+    }
+
+    const departmentName = department.name;
+
+    // Calculate 10% provident fund deduction
+    const salary = parseFloat(req.body.salary);
+    const providentFundDeduction = salary * 0.1;
+
+    // Get the current month and year
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    const currentYear = new Date().getFullYear();
+
+    // Create new user without manually setting employeeID
+    const newUser = new User({
+      fname: req.body.fname,
+      lname: req.body.lname,
+      department: departmentName,
+      designation: req.body.designation,
+      city: req.body.city,
+      phoneNum: req.body.phoneNum,
+      bankName: req.body.bankName,
+      accountName: req.body.accountName,
+      accountNum: req.body.accountNum,
+      cnic: req.body.cnic,
+      joining: req.body.joining,
+      email: req.body.email,
+      password: req.body.password,
+      address: req.body.address,
+      salary: req.body.salary,
+      status: req.body.status,
+      role: "employee",
+
+      salaryHistory: [
+        {
+          salary: req.body.salary,
+          month: `${currentMonth} ${currentYear}`
+        }
+      ]
+    });
+
+    // Generate PF history from joining date
+    const salaryHistoryForPF = newUser.salaryHistory;
+    newUser.providentFund.history = generateProvidentFundHistory(newUser.joining, salaryHistoryForPF);
+    
+    // Calculate total PF balance
+    newUser.providentFund.balance = newUser.providentFund.history.reduce((sum, entry) => sum + entry.amount, 0);
+
+    await newUser.save();
+
+    const decryptedPassword = newUser.decryptPassword();
+
+    const mailOptions = {
+      from: '"Payroll Management System" <abbasmansoor456@gmail.com>',
+      to: newUser.email,
+      subject: 'Account Credentials',
+      text: `Dear ${newUser.fname} ${newUser.lname},
+
+We are thrilled to welcome you to [Company Name] as our new ${newUser.designation}. Your monthly salary is ${newUser.salary}.
+
+Your Payroll Management System account has been created:
+
+- Email: ${newUser.email}
+- Password: ${decryptedPassword}
+- Employee ID: ${newUser.employeeID}
+
+Please log in and update your password.
+
+Best regards,  
+Payroll Management System Team`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return res.status(500).send({ error: "Failed to send email" });
+      } else {
+        res.status(201).json({
+          message: "User registered and credentials emailed successfully.",
+          employeeID: newUser.employeeID
+        });
+      }
+    });
+
+  } catch (error) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      return res.status(400).json({ error: `Duplicate value for field: ${field}` });
+    }
+    res.status(500).json({ error: "Failed to register user." });
+  }
+});
+
+
+
+app.get('/provident-fund/:employeeID/:year', async (req, res) => {
+  try {
+    const { employeeID, year } = req.params;
+    // First try to find by MongoDB _id, if that fails, find by employeeID string
+    let user = await User.findById(employeeID);
+    
+    if (!user) {
+      user = await User.findOne({ employeeID: employeeID });
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    // Regenerate PF history to ensure all months are included
+    user.providentFund.history = generateProvidentFundHistory(user.joining, user.salaryHistory);
+    
+    // Filter by selected year
+    const providentFundHistory = user.providentFund.history
+      .filter(entry => entry.month && entry.month.includes(year))
+      .map(entry => ({
+        month: entry.month,
+        amount: entry.amount,
+        year: year
+      }));
+
+    const totalProvidentFundBalance = user.providentFund.history.reduce((sum, entry) => sum + entry.amount, 0);
+
+    res.json({
+      providentFundHistory,
+      totalProvidentFundBalance,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve provident fund data' });
+  }
+});
+
+
+
+app.get('/provident-fund/:employeeID', async (req, res) => {
+  try {
+    const { employeeID } = req.params;
+
+    // First try to find by MongoDB _id, if that fails, find by employeeID string
+    let user = await User.findById(employeeID);
+    
+    if (!user) {
+      user = await User.findOne({ employeeID: employeeID });
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    // Regenerate PF history to ensure latest data
+    user.providentFund.history = generateProvidentFundHistory(user.joining, user.salaryHistory);
+    const totalProvidentFund = user.providentFund.history.reduce((sum, entry) => sum + entry.amount, 0);
+    const loanHistory = user.loanHistory;
+
+    res.status(200).json({ totalProvidentFund, loanHistory });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
+app.post('/api/loan-request', async (req, res) => {
+  try {
+    const { employeeID, loanAmount } = req.body;
+    const user = await User.findById(employeeID);
+
+    if (!user) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+    if (parseInt(loanAmount) > user.providentFund.balance) {
+      return res.status(400).json({ error: "Insufficient provident fund balance" });
+    }
+
+    const newLoanRequest = new LoanRequest({
+      employeeId: user.employeeID,
+      employeeName: `${user.fname} ${user.lname}`,
+      loanAmount: loanAmount,
+      loanDate: new Date(),
+      status: 'pending',
+    });
+
+    const savedLoanRequest = await newLoanRequest.save();
+
+    user.loanHistory.push({
+      _id: savedLoanRequest._id,
+      amount: loanAmount,
+      date: new Date(),
+      status: 'pending',
+    });
+    await user.save();
+
+    res.status(201).json({ message: "Loan request created successfully", newLoanRequest });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+app.get('/api/loan-requests/:employeeID', async (req, res) => {
+  try {
+
+    const { employeeID } = req.params;
+    const user = await User.findById(employeeID);
+
+    if (!user) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    res.status(200).json(user.loanHistory);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
+app.delete('/api/to-delete-loan-request/:requestId/:employeeID', async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { employeeID } = req.params; // Use req.query to get the query parameter
+
+
+    const user = await User.findById(employeeID);
+
+
+    if (!user) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    const loanRequestIndex = user.loanHistory.findIndex(request => request._id.toString() === requestId);
+
+    if (loanRequestIndex === -1) {
+      return res.status(404).json({ error: "Loan request not found" });
+    }
+
+    user.loanHistory.splice(loanRequestIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Loan request deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.delete('/api/admin/loan-request-delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await LoanRequest.findByIdAndDelete(id);
+    res.status(200).json({ message: 'Loan Request Deleted Successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Loan Request could not deleted' });
+  }
+});
+
+
+
+app.put('/employees/:id', async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedUser) {
+      return res.status(404).send({ error: 'Employee not found' });
+    }
+    res.send(updatedUser);
+  } catch (err) {
+    res.status(500).send({ error: 'Failed to update employee' });
+  }
+});
+
+
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the credentials match the admin's hardcoded credentials
+    if (email === "admin" && password === "acbd1324") {
+      // If admin credentials match, return success with admin role
+      return res.status(200).json({
+        message: "Login successful",
+        user: {
+          email: "admin",
+          role: "admin", // Include a unique identifier for admin (if applicable)
+        },
+      });
+    }
+
+    // Find the user by email in the database
+    const user = await User.findOne({ email });
+    //("email : ", email);
+
+    if (user) {
+      // Decrypt stored password and compare with input password
+      //("User object:", user);
+      //("Encrypted password from DB:", user.password);
+      //("Type of password:", typeof user.password);
+      const decryptedPassword = user.decryptPassword();
+      //('decrypted password: ', decryptedPassword, "simple passsord: ", password);
+      if (password === decryptedPassword) {
+        //("asli emoloyee hau");
+        const mailOptions = {
+          from: '"Payroll Management System" <abbasmansoor456@gmail.com>', // Use a professional email address
+          to: user.email,
+          subject: 'Security Alert: Account Login Notification', // Improved subject line
+          text: `Dear ${user.fname} ${user.lname},
+
+We wanted to notify you that your account was logged in on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}.
+
+If you did not initiate this login, we strongly recommend that you change your password immediately to secure your account.
+
+Should you have any concerns or need assistance, please do not hesitate to contact our support team.
+
+Best regards,  
+Payroll Management System Team
+
+      `
+        };
+
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return res.status(500).send({ error: "Failed to send email" });
+          } else {
+            res.send({ message: "Your password has been sent to your email" });
+          }
+        });
+
+        return res.status(200).json({
+          message: "Login successful",
+          user: {
+            email: user.email,
+            role: user.role,
+            employeeId: user._id.toString(), // Include the user’s employee ID
+          },
+        });
+      }
+    }
+
+    // If credentials don't match, send an error response
+    res.status(401).json({ error: "Invalid email or password" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to login" });
+  }
+});
+
+app.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send({ error: "No account exists with this email" });
+    }
+
+    // Decrypt the password
+    const decryptedPassword = user.decryptPassword();
+
+    // Send email with the decrypted password
+    const mailOptions = {
+      from: '"Payroll Management System" <abbasmansoor456@gmail.com>', // Use a professional email address
+      to: user.email,
+      subject: 'Your Password Recovery Information', // Improved subject line
+      text: `Hello,
+    
+    We received a request to recover your password. Your current password is: ${decryptedPassword}
+    
+    If you did not request this, please contact our support team.
+    
+    Best regards,
+    Payroll Management System Team`
+    };
+
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return res.status(500).send({ error: "Failed to send email" });
+      } else {
+        res.send({ message: "Your password has been sent to your email" });
+      }
+    });
+  } catch (err) {
+    res.status(500).send({ error: "Failed to process forgot password request" });
+  }
+});
+
+
+
+app.post('/api/departments', async (req, res) => {
+  try {
+    const { name, description, designations } = req.body;
+    const newDepartment = new Department({
+      name,
+      description,
+      designations
+    });
+    await newDepartment.save();
+    res.status(201).json(newDepartment);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add department' });
+  }
+});
+
+app.get('/api/departments', async (req, res) => {
+  try {
+    const departments = await Department.find();
+    res.json(departments);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch departments' });
+  }
+});
+
+app.delete('/api/departments/:id', async (req, res) => {
+  try {
+    const department = await Department.findByIdAndDelete(req.params.id);
+    if (department) {
+      res.json({ message: 'Department deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Department not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete department' });
+  }
+});
+
+app.get('/api/departments/:id/designations', async (req, res) => {
+  try {
+    const department = await Department.findById(req.params.id);
+    if (department) {
+      res.json(department.designations);
+    } else {
+      res.status(404).json({ error: 'Department not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch designations' });
+  }
+});
+
+app.get('/api/departments/:id', async (req, res) => {
+  try {
+    const department = await Department.findById(req.params.id);
+    if (!department) {
+      return res.status(404).json({ error: 'Department not found' });
+    }
+    res.json(department);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch department' });
+  }
+});
+
+app.put('/api/departments/designations/:departmentId', async (req, res) => {
+  const { departmentId } = req.params;
+  const { oldDesignation, newDesignation } = req.body;
+
+  try {
+    const department = await Department.findById(departmentId);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    const designationIndex = department.designations.indexOf(oldDesignation);
+    if (designationIndex === -1) {
+      return res.status(404).json({ message: 'Designation not found' });
+    }
+
+    department.designations[designationIndex] = newDesignation;
+    await department.save();
+
+    res.status(200).json(department);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update designation', error });
+  }
+});
+
+app.put('/api/departments/:id', async (req, res) => {
+  try {
+    const { name, description, designations } = req.body;
+    const updatedDepartment = await Department.findByIdAndUpdate(
+      req.params.id,
+      { name, description, designations },
+      { new: true }
+    );
+    if (!updatedDepartment) {
+      return res.status(404).json({ error: 'Department not found' });
+    }
+    res.json(updatedDepartment);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update department' });
+  }
+});
+
+
+
+app.get('/api/employees', async (req, res) => {
+  const { departmentId, designation } = req.query; // Extracting query params
+
+  try {
+    // Check if departmentId is valid
+    if (!mongoose.Types.ObjectId.isValid(departmentId)) {
+      return res.status(400).json({ error: 'Invalid department ID' });
+    }
+
+    // Convert departmentId to ObjectId for querying
+    const departmentObjectId = mongoose.Types.ObjectId(departmentId);
+
+    // Query to fetch employees based on department and designation
+    const employees = await Employee.find({
+      department: departmentObjectId,
+      designation: designation,
+    });
+
+    // Check if employees are found
+    if (employees.length === 0) {
+      return res.status(404).json({ message: 'No employees found' });
+    }
+
+    // Send employees data as JSON
+    res.status(200).json(employees);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch employees' });
+  }
+});
+
+
+app.get('/employeeslist', async (req, res) => {
+  try {
+
+    const { year, month, department, designation } = req.query;
+    let query = {};
+
+    if (department) {
+      query.department = department;
+    }
+    if (designation) {
+      query.designation = designation;
+    }
+    if (year && month) {
+      query['attendance.month'] = month;
+    }
+
+    const employees = await User.find(query);
+
+    res.json(employees);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch employees' });
+  }
+});
+
+
+app.get("/departments", async (req, res) => {
+  try {
+    const departments = await User.distinct("department");
+    res.json(departments.map((name, index) => ({ _id: index, name })));
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch departments" });
+  }
+});
+
+
+app.get("/employees", async (req, res) => {
+  try {
+    let employees = await User.find();
+    res.send(employees);
+  } catch (err) {
+    res.status(500).send({ error: "Failed to fetch employees" });
+  }
+});
+
+app.delete('/employees/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const employee = await User.findByIdAndDelete(id);
+    if (employee) {
+      res.status(200).send({ message: 'Employee deleted successfully' });
+    } else {
+      res.status(404).send({ message: 'Employee not found' });
+    }
+  } catch (err) {
+    res.status(500).send({ error: "Failed to delete employee" });
+  }
+});
+
+app.post("/attendance/:id", async (req, res) => {
+  const { id } = req.params;
+  const { month, dates } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send({ message: "Employee not found" });
+    }
+
+    const existingAttendance = user.attendance.find(a => a.month === month);
+    if (existingAttendance) {
+      existingAttendance.dates = dates;
+    } else {
+      user.attendance.push({ month, dates });
+    }
+
+    await user.save();
+    res.status(200).send({ message: "Attendance saved successfully" });
+  } catch (error) {
+    res.status(500).send({ error: "Failed to save attendance" });
+  }
+});
+
+// Auto-mark absent endpoint - can be called manually or by cron job
+app.post('/api/auto-mark-absent', async (req, res) => {
+  try {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+
+    // Get all employees
+    const allEmployees = await User.find({}, 'employeeID _id');
+
+    let absentsMarked = 0;
+    let alreadyMarked = 0;
+
+    for (const employee of allEmployees) {
+      // Check if attendance is already marked for today
+      const existingAttendance = await AttendanceHistory.findOne({
+        employeeId: employee.employeeID,
+        date: formattedDate
+      });
+
+      if (!existingAttendance) {
+        // Mark as absent if not already marked
+        const newAttendance = new AttendanceHistory({
+          employeeId: employee.employeeID,
+          date: formattedDate,
+          status: 'Absent',
+          year,
+          month
+        });
+        await newAttendance.save();
+        absentsMarked++;
+      } else {
+        alreadyMarked++;
+      }
+    }
+
+    res.status(200).json({
+      message: 'Auto-absent marking completed',
+      absentsMarked,
+      alreadyMarked,
+      totalEmployees: allEmployees.length,
+      date: formattedDate
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Failed to auto-mark absent',
+      error: error.message
+    });
+  }
+});
+
+// Schedule auto-mark absent to run daily at 11:59 PM
+// The cron expression '59 23 * * *' means: at 23:59 (11:59 PM) every day
+cron.schedule('59 23 * * *', async () => {
+  console.log('Running scheduled auto-mark absent job...');
+  try {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+
+    // Get all employees
+    const allEmployees = await User.find({}, 'employeeID _id');
+
+    let absentsMarked = 0;
+
+    for (const employee of allEmployees) {
+      // Check if attendance is already marked for today
+      const existingAttendance = await AttendanceHistory.findOne({
+        employeeId: employee.employeeID,
+        date: formattedDate
+      });
+
+      if (!existingAttendance) {
+        // Mark as absent if not already marked
+        const newAttendance = new AttendanceHistory({
+          employeeId: employee.employeeID,
+          date: formattedDate,
+          status: 'Absent',
+          year,
+          month
+        });
+        await newAttendance.save();
+        absentsMarked++;
+      }
+    }
+
+    console.log(`✓ Auto-mark absent completed: ${absentsMarked} employees marked as absent for ${formattedDate}`);
+  } catch (error) {
+    console.error('Error in auto-mark absent cron job:', error);
+  }
+});
+
+// Export the app so the server can be started from server.js after DB connection
+module.exports = app;
