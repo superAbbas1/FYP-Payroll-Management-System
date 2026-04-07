@@ -1,0 +1,158 @@
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+body::-webkit-scrollbar-thumb {
+    background-color: #34495e;
+    border-radius: 10px;
+  }
+
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+}
+
+.grid-1-col {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.hide-in-mobile-table {
+  display: table-cell;
+}
+
+.view-in-mobile-only {
+  display: none;
+}
+.view-in-mobile-only-table {
+  display: none;
+}
+
+select,
+option {
+  cursor: pointer;
+}
+
+/* aniamtions */
+/* Slide-down animation */
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide-up animation */
+@keyframes slide-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+
+/* buttonsss - close button */
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  border: 1.5px solid black;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  transition: background-color 0.2s ease-in-out;
+}
+.close-button:hover {
+  background-color: black;
+}
+.close-button svg {
+  width: 100%;
+  display: block;
+  color: black;
+  transition: color 0.2s ease-in-out;
+}
+.close-button:hover svg {
+  color: white;
+}
+
+/* main buttons */
+.main-button,
+.main-button-2 {
+  background-color: black;
+  border: 1.5px solid black;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: backgrounnd-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+.main-button-2 {
+  background-color: transparent;
+  color: black;
+}
+
+.main-button:hover {
+  background-color: transparent;
+  color: black;
+  border-color: black;
+}
+.main-button-2:hover {
+  background-color: black;
+  color: white;
+}
+
+
+
+
+@media screen and (max-width: 786px) {
+  .hide-in-mobile-table {
+    display: none;
+  }
+  .grid-2-col, .grid-3-col {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .view-in-mobile-only {
+    display: block;
+  }
+  .view-in-mobile-only-table {
+    display: table-cell;
+  }
+}

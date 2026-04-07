@@ -1,0 +1,59 @@
+/* EditSalary.css */
+
+.edit-salary-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-salary-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.edit-salary-container .filter-item {
+  flex: 1;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.edit-salary-container label {
+  display: block;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.edit-salary-container select,
+.edit-salary-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.edit-salary-container .update-salary-button:disabled {
+  background-color: #686868;
+  cursor: not-allowed;
+  border-color: #686868;
+}
+
+.edit-salary-container .update-salary-button:disabled:hover {
+  color: white;
+}
+
+.edit-salary-container .save-button:hover {
+  background-color: #555;
+  /* Darker grey on hover */
+}
+
+.enter-salary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 258px;
+  margin-top: 10px;
+}

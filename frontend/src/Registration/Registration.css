@@ -1,0 +1,115 @@
+/* Registration.css */
+
+.registration-container {
+  max-width: 100%; /* Increased width to accommodate more inputs in a row */
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.registration-container h2 {
+  text-align: left;
+  font-size: clamp(1.1rem, 3vw, 2rem);
+  margin-bottom: 20px;
+}
+
+.registration-container .form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.3rem;
+  flex-direction: row;
+}
+
+.registration-container .validation-text {
+  color: red;
+  font-size: x-small;
+  margin: 0;
+  position: absolute;
+}
+
+.registration-container form h3 {
+  font-size: clamp(1rem, 1.6vw, 1.5rem);
+  margin: 0 0 5px;
+}
+
+.form-row .inputBox {
+  flex: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.form-row-company {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.3rem;
+  align-items: center; 
+}
+
+.form-row-company select {
+  padding: 10px 0 10px 0;
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-row-company input{
+  width: 100%;
+  padding: 10px 0 10px 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.inputBox input, .inputBox select, .emailBox, .passwordBox {
+  flex: 1; /* Ensures input fields take equal space */
+  min-width: 0; /* Ensures input boxes shrink properly in smaller containers */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #ffffff; /* White background color */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+.emailBox {
+  max-width: 30%; /* Limit width for smaller screens */
+}
+
+.passwordBox {
+  max-width: 30%; /* Limit width for smaller screens */
+}
+
+.submitButton {
+  display: block; /* Ensures the button is a block element for centering */
+  width: 150px; /* Limit button width to fit content */
+  padding: 10px 20px; /* Added padding for better button appearance */
+  background-color: #343a40; /* Dark grey button color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 auto; /* Centers the button horizontally */
+  text-align: center;
+}
+
+.submitButton:hover {
+  background-color: #23272b; /* Darker shade on hover */
+}
+
+@media screen and (max-width: 786px) {
+  .registration-container .form-row {
+    flex-direction: column;
+  }
+  .registration-container .form-row-company {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

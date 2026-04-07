@@ -1,0 +1,68 @@
+.provident-funds-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px 0;
+  background-color: #f9f9f9;
+  color: black;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Arial', sans-serif;
+}
+
+.provident-funds-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  color: black;
+  text-transform: uppercase;
+}
+
+.provident-funds-container .total-fund-balance h2 {
+  margin-bottom: 20px;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: black;
+  text-align: center;
+}
+
+.provident-funds-container .filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.provident-funds-container .filter-container label {
+  margin-right: 10px;
+}
+
+.provident-funds-container .provident-funds-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.provident-funds-container .provident-funds-table th,
+.provident-funds-container .provident-funds-table td {
+  padding: 10px 15px;
+  border: 1px solid #ffffff;
+  text-align: center;
+}
+
+.provident-funds-container .provident-funds-table th {
+  background-color: #ffffff;
+  color: black;
+}
+
+.provident-funds-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.provident-funds-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+
+@media screen and (max-width: 600px) {
+  .provident-funds-container .filter-container {
+    flex-direction: column;
+  }
+}

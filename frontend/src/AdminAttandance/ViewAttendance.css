@@ -1,0 +1,76 @@
+.view-attendance-container {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.view-attendance-container .view-attendance-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: black;
+}
+
+.view-attendance-container .view-attendance-filters {
+  margin-bottom: 20px;
+  gap: 1rem;
+}
+
+.view-attendance-filters .filter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.view-attendance-container .filter-item label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: black;
+}
+
+.view-attendance-container .filter-item select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+}
+
+.view-attendance-container .filter-item select:focus {
+  border-color: #007bff;
+}
+
+.view-attendance-container .attendance-records {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+
+.view-attendance-container .attendance-records-title {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: black;
+}
+
+.view-attendance-container .attendance-records-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.view-attendance-container .attendance-record-item {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.view-attendance-container .no-records-message {
+  color: #888;
+  text-align: center;
+  margin-top: 20px;
+}

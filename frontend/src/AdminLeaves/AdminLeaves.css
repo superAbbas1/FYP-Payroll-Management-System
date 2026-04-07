@@ -1,0 +1,49 @@
+/* leave-requests.css */
+
+.admin-leave-section.requests-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-leave-section.requests-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: black;
+}
+
+.admin-leave-section ul {
+  list-style-type: none;
+  display: flex;
+  padding: 0;
+  flex-direction: column-reverse;
+}
+
+.admin-leave-section .request-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.admin-leave-section .request-details p {
+  margin: 5px 0;
+}
+
+.admin-leave-section .request-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  /* Add space between buttons */
+}
+
+.admin-leave-section .request-actions button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}

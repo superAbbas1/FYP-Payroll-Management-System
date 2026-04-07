@@ -1,0 +1,103 @@
+.admin-view-salary-container {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-view-salary-container .filter-line {
+  margin-bottom: 20px;
+}
+
+.admin-view-salary-container .filter-line label {
+  color: black;
+  display: block;
+  margin: 10px 0 5px;
+}
+
+.admin-view-salary-container .filter-item {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.admin-view-salary-container select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.admin-view-salary-container .salary-info {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-view-salary-container .salary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-view-salary-container .salary-table tr {
+  position: relative;
+}
+
+.admin-view-salary-container .salary-table th,
+.admin-view-salary-container .salary-table td {
+  padding: 5px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+  background-color: white;
+}
+
+.admin-view-salary-container .salary-table th {
+  background-color: #f1f1f1;
+}
+
+.admin-view-salary-container .salary-table .view-salary-info {
+  padding: 0;
+  border: none;
+  text-align: -webkit-center;
+  background-color: transparent;
+}
+
+.admin-view-salary-container .salary-table .view-salary-info-wrapper {
+  width: 20px;
+  cursor: pointer;
+}
+
+  .mobile-view-salary-info-wrapper {
+  position: absolute;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  z-index: 1;
+  gap: 0;
+  max-width: 200px;
+  top: -5%;
+  right: 7%;
+  padding: 5px;
+  background-color: #f5f5f5;
+  border: 1px solid black;
+  border-radius: 5px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.view-salary-info-wrapper:hover .mobile-view-salary-info-wrapper {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+@media screen and (max-width: 786px) {
+    .mobile-view-salary-info-wrapper {
+        display: flex;
+    }
+}

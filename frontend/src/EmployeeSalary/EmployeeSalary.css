@@ -1,0 +1,50 @@
+.salary-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  color: black;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Arial', sans-serif;
+}
+
+.salary-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  color: black;
+  text-transform: uppercase;
+}
+
+.salary-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.salary-details p {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  background-color: #ffffff;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  width: 100%;
+  margin: 0;
+}
+
+.salary-details p:hover {
+  transform: scale(1.05);
+}
+
+.salary-details p strong {
+  font-weight: bold;
+  color: black;
+}
+
+.salary-details p span {
+  color: black;
+}
