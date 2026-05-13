@@ -44,12 +44,10 @@
   background-color: #fff;
   color: #111;
   box-sizing: border-box;
+  cursor: pointer;
   width: 100%;
 }
 
-.employee-leave-form-container .leave-submit-button {}
-
-.employee-leave-form-container .leave-submit-button:hover {}
 
 .leave-requests-list {
   list-style: none;

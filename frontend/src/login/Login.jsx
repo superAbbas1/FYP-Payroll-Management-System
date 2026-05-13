@@ -5,6 +5,7 @@ import UserContext from "../Context/UserContext";
 import "./Login.css";
 import logoWhite from "./logo-white.png";
 import { FiArrowLeft } from "react-icons/fi";
+import showMessage from "../utils/showMessage";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -48,7 +49,7 @@ const Login = () => {
         }
       } catch (err) {
         console.error("the comouter error ",err);
-        alert("Invalid email or password");
+        showMessage("Invalid email or password", "error");
       } finally {
         setLoading(false);
       }
@@ -65,12 +66,12 @@ const Login = () => {
     axios
       .post("http://localhost:5000/api/forgot-password", { email })
       .then((res) => {
-        alert("Your password has been sent to your email");
+        showMessage("Your password has been sent to your email", "success");
         setShowForgotPassword(false);
       })
       .catch((err) => {
         console.error(err);
-        alert("Failed to process forgot password request or the Email input is empty");
+        showMessage("Failed to process forgot password request or the Email input is empty", "error");
       });
   };
 

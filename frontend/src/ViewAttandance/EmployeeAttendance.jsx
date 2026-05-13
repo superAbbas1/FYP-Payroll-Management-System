@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./EmployeeAttendance.css";
+import showMessage from "../utils/showMessage";
 
 const EmployeeAttendance = () => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -12,7 +13,7 @@ const EmployeeAttendance = () => {
     setSelectedDate(date);
     const employeeId = localStorage.getItem('employeeId');
     if (!employeeId) {
-      alert("Employee ID not found. Please log in again.");
+      showMessage("Employee ID not found. Please log in again.", "error");
       return;
     }
     const targetYear = date.getFullYear();

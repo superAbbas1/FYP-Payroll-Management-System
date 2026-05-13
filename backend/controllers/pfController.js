@@ -1,6 +1,16 @@
 const User = require('../db/User');
 const { generateProvidentFundHistory } = require('../utils/helpers');
 
+const findUserByEmployeeIdentifier = async (employeeID) => {
+  let user = await User.findOne({ employeeID });
+
+  if (!user && /^[0-9a-fA-F]{24}$/.test(employeeID)) {
+    user = await User.findById(employeeID);
+  }
+
+  return user;
+};
+
 /**
  * Get provident fund for specific year
  * Saves the generated history to database
@@ -9,8 +19,8 @@ exports.getProvidentFundByYear = async (req, res) => {
   try { 
     const { employeeID, year } = req.params;
     
-    // First try to find by MongoDB _id, if that fails, find by employeeID string
-    let user = await User.findOne({ employeeID: employeeID });
+    // First try employeeID string, then MongoDB _id for admin screens that send _id.
+    let user = await findUserByEmployeeIdentifier(employeeID);
     if (!user) {
       return res.status(404).json({ error: 'Employee not found' });
     }
@@ -18,9 +28,8 @@ exports.getProvidentFundByYear = async (req, res) => {
     // Regenerate PF history to ensure all months are included
     const generatedHistory = generateProvidentFundHistory(user.joining, user.salaryHistory);
     
-    // SAVE the generated history to database
+    // Save generated monthly history only. The balance is changed by loan approval.
     user.providentFund.history = generatedHistory;
-    user.providentFund.balance = generatedHistory.reduce((sum, entry) => sum + entry.amount, 0);
     await user.save();
     
     // Filter by selected year
@@ -32,7 +41,7 @@ exports.getProvidentFundByYear = async (req, res) => {
         year: year
       }));
 
-    const totalProvidentFundBalance = generatedHistory.reduce((sum, entry) => sum + entry.amount, 0);
+    const totalProvidentFundBalance = user.providentFund.balance;
 
     res.json({
       providentFundHistory,
@@ -52,8 +61,8 @@ exports.getProvidentFund = async (req, res) => {
   try {
     const { employeeID } = req.params;
 
-    // First try to find by MongoDB _id, if that fails, find by employeeID string
-    let user = await User.findOne({ employeeID: employeeID });
+    // First try employeeID string, then MongoDB _id for admin screens that send _id.
+    let user = await findUserByEmployeeIdentifier(employeeID);
 
     if (!user) {
       return res.status(404).json({ error: "Employee not found" });
@@ -64,10 +73,8 @@ exports.getProvidentFund = async (req, res) => {
     
     // SAVE the generated history to database
     user.providentFund.history = generatedHistory;
-    // user.providentFund.balance = generatedHistory.reduce((sum, entry) => sum + entry.amount, 0);
     await user.save();
 
-    // const totalProvidentFund = generatedHistory.reduce((sum, entry) => sum + entry.amount, 0);
     const totalProvidentFund = user.providentFund.balance; // Use saved balance for consistency
     console.log("Total Provident Fund Balance:", totalProvidentFund);
     const loanHistory = user.loanHistory;
@@ -90,7 +97,7 @@ exports.savePFRecord = async (req, res) => {
   try {
     const { employeeID } = req.params;
 
-    let user = await User.findOne({ employeeID: employeeID });
+    let user = await findUserByEmployeeIdentifier(employeeID);
 
     if (!user) {
       return res.status(404).json({ error: "Employee not found" });
@@ -99,7 +106,6 @@ exports.savePFRecord = async (req, res) => {
     // Regenerate and save
     const generatedHistory = generateProvidentFundHistory(user.joining, user.salaryHistory);
     user.providentFund.history = generatedHistory;
-    user.providentFund.balance = generatedHistory.reduce((sum, entry) => sum + entry.amount, 0);
     await user.save();
 
     res.status(200).json({

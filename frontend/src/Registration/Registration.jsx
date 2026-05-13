@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Registration.css";
+import showMessage from "../utils/showMessage";
 
 const Registration = () => {
   const [fname, setFname] = useState("");
@@ -94,17 +95,17 @@ const Registration = () => {
     e.preventDefault();
 
     if (!fname || !lname || !email || !cnic || !department || !designation || !city || !phoneNum || !password || !joining || !cnic || !address || !salary || !status) {
-      alert("Please fill in all required fields.");
+      showMessage("Please fill in all required fields.", "warning");
       return;
     }
 
     if (cnic.length !== 13) {
-      alert("Invalid CNIC. It must be of 13 digits");
+      showMessage("Invalid CNIC. It must be of 13 digits", "warning");
       return;
     }
 
     if (phoneNum.length !== 11) {
-      alert("Invalid Phone Number");
+      showMessage("Invalid Phone Number", "warning");
       return;
     }
 
@@ -128,7 +129,7 @@ const Registration = () => {
         status,
       })
       .then((res) => {
-        alert(`User created successfully. Employee ID: ${res.data.employeeID}`);
+        showMessage(`User created successfully. Employee ID: ${res.data.employeeID}`, "success");
         // Optionally, reset form fields after successful registration
         setFname("");
         setLname("");
@@ -150,9 +151,9 @@ const Registration = () => {
       .catch((err) => {
         console.error("Error registering user:", err);
         if (err.response && err.response.data) {
-          alert(err.response.data.error);
+          showMessage(err.response.data.error, "error");
         } else {
-          alert("Failed to register user. Please try again.");
+          showMessage("Failed to register user. Please try again.", "error");
         }
       });
   };

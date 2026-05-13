@@ -1,5 +1,6 @@
 const User = require('../db/User');
 const Department = require('../db/Department');
+const bcrypt = require('bcrypt');
 const { sendEmail, generateProvidentFundHistory } = require('../utils/helpers');
 
 /**

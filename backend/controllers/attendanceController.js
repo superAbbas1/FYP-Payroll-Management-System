@@ -21,6 +21,9 @@ exports.checkAttendanceToday = async (req, res) => {
   console.log('Checking attendance for employee:', employeeId, 'on date:', date);
   try {
     const user = await User.findOne({ employeeID: employeeId });
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
     const targetEmployee = user.employeeID;
     const targetAttendance = await AttendanceHistory.findOne({
       employeeId: targetEmployee,
@@ -41,8 +44,8 @@ exports.checkAttendanceToday = async (req, res) => {
       })
     }
   }
-  catch {
-    res.status(500).json({ error: 'Failed to fetch attendance' });
+  catch (error) {
+    res.status(500).json({ error: 'Failed to fetch attendance', details: error.message });
   }
 };
 
@@ -59,6 +62,9 @@ exports.markAttendance = async (req, res) => {
     const year = parsedDate.getFullYear();
     const month = parsedDate.getMonth() + 1;
     const user = await User.findOne({ employeeID: employeeId });
+    if (!user) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
 
     // Check if already marked
     const existingAttendance = await AttendanceHistory.findOne({
@@ -125,6 +131,9 @@ exports.getAdminAttendance = async (req, res) => {
 
   try {
     const targetEmployee = await User.findById(employeeId);
+    if (!targetEmployee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
     const targetEmployeeId = targetEmployee.employeeID
 
     const records = await AttendanceHistory.find({

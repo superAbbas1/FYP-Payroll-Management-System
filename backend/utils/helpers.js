@@ -96,8 +96,28 @@ const generateProvidentFundHistory = (joiningDate, salaryHistory) => {
   return pfHistory;
 };
 
+const getApprovedLoanTotal = (loanHistory = []) => {
+  return loanHistory.reduce((sum, loan) => {
+    if (loan.status !== 'Approved') {
+      return sum;
+    }
+
+    return sum + (Number(loan.amount) || 0);
+  }, 0);
+};
+
+const calculateProvidentFundBalance = (providentFundHistory = [], loanHistory = []) => {
+  const totalProvidentFund = providentFundHistory.reduce((sum, entry) => {
+    return sum + (Number(entry.amount) || 0);
+  }, 0);
+
+  return totalProvidentFund - getApprovedLoanTotal(loanHistory);
+};
+
 module.exports = {
   sendEmail,
   generateProvidentFundHistory,
+  getApprovedLoanTotal,
+  calculateProvidentFundBalance,
   transporter
 };

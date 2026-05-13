@@ -6,14 +6,11 @@ const ViewSalary = () => {
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const [employeeName, setEmployeeName] = useState('');
   const [salaryRecords, setSalaryRecords] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedDepartmentID, setSelectedDepartmentID] = useState('');
   const [selectedDesignation, setSelectedDesignation] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
-  const [viewSalaryInfo, setViewSalaryInfo] = useState(false);
-  const [outAnimation, setOutAnimation] = useState(false);
-  const [inAnimation, setInAnimation] = useState(false);
 
   // Fetch departments on component mount
   useEffect(() => {
@@ -32,12 +29,12 @@ const ViewSalary = () => {
   // Fetch designations when a department is selected
   useEffect(() => {
     const fetchDesignations = async () => {
-      if (!selectedDepartment) return;
+      if (!selectedDepartmentID) return;
 
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/departments/${selectedDepartment}/designations`
+          `http://localhost:5000/api/departments/${selectedDepartmentID}/designations`
         );
         setDesignations(response.data);
       } catch (error) {
@@ -46,7 +43,7 @@ const ViewSalary = () => {
     };
 
     fetchDesignations();
-  }, [selectedDepartment]);
+  }, [selectedDepartmentID]);
 
   // Fetch employees when a designation is selected
   useEffect(() => {
@@ -56,7 +53,7 @@ const ViewSalary = () => {
       try {
         const response = await axios.get('http://localhost:5000/employeeslist', {
           params: {
-            departmentId: selectedDepartment,
+            department: selectedDepartment,
             designation: selectedDesignation,
           },
         });
@@ -73,9 +70,10 @@ const ViewSalary = () => {
   // Fetch salary records when an employee is selected
   useEffect(() => {
     if (selectedEmployee) {
-      fetchSalaryRecords(selectedEmployee);
+      const selectedEmp = employees.find(emp => emp._id === selectedEmployee);
+      fetchSalaryRecords(selectedEmp?.employeeID || selectedEmployee);
     }
-  }, [selectedEmployee]);
+  }, [selectedEmployee, employees]);
 
   // Fetch salary records for a specific employee
   const fetchSalaryRecords = async (employeeId) => {
@@ -125,7 +123,10 @@ const ViewSalary = () => {
 
   // Handlers for filter selection
   const handleDepartmentChange = (event) => {
-    setSelectedDepartment(event.target.value);
+    const selectedDeptId = event.target.value;
+    const selectedDept = departments.find((dept) => dept._id === selectedDeptId);
+    setSelectedDepartmentID(selectedDeptId);
+    setSelectedDepartment(selectedDept?.name || '');
     setSelectedDesignation('');
     setSelectedEmployee('');
     setDesignations([]);  // Reset designations
@@ -144,39 +145,6 @@ const ViewSalary = () => {
     const employeeId = event.target.value;
     setSelectedEmployee(employeeId);
     setSalaryRecords([]);
-
-    const selectedEmployee = employees.find(emp => emp._id === employeeId);
-    if (selectedEmployee) {
-      setEmployeeName(`${selectedEmployee.fname} ${selectedEmployee.lname}`);
-    } else {
-      setEmployeeName('');
-    }
-  };
-
-
-  // Function to format date into year and month
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) {
-      console.error('Invalid date:', dateStr);
-      return { year: 'N/A', month: 'N/A' };
-    }
-    return {
-      year: date.getFullYear(),
-      month: date.toLocaleString('default', { month: 'long' })
-    };
-  };
-
-  const handleViewSalaryInfo = () => {
-    setViewSalaryInfo(true);
-    setOutAnimation(false);
-  };
-  const handleHideSalaryInfo = () => {
-    setOutAnimation(true);
-    setTimeout(() => {
-      setViewSalaryInfo(false);
-      setOutAnimation(false);
-    }, 200);
   };
 
   return (
@@ -185,7 +153,7 @@ const ViewSalary = () => {
       <div className="filter-line grid-3-col">
         <div className="filter-item">
           <label>Department:</label>
-          <select value={selectedDepartment} onChange={handleDepartmentChange}>
+          <select value={selectedDepartmentID} onChange={handleDepartmentChange}>
             <option value="">Select Department</option>
             {departments.map((dept) => (
               <option key={dept._id} value={dept._id}>
@@ -199,7 +167,7 @@ const ViewSalary = () => {
           <select
             value={selectedDesignation}
             onChange={handleDesignationChange}
-            disabled={!selectedDepartment}
+            disabled={!selectedDepartmentID}
           >
             <option value="">Select Designation</option>
             {designations.map((desig, index) => (
@@ -214,7 +182,7 @@ const ViewSalary = () => {
           <select
             value={selectedEmployee}
             onChange={handleEmployeeChange}
-            disabled={!selectedDepartment || !selectedDesignation}
+            disabled={!selectedDepartmentID || !selectedDesignation}
           >
             <option value="">Select Employee</option>
             {employees.map((emp) => (
@@ -240,7 +208,6 @@ const ViewSalary = () => {
             </thead>
             <tbody>
               {salaryRecords.map((record, index) => {
-                const { year, month } = formatDate(record.date);
                 return (
                   <tr key={index}>
                     <td>{record.month}</td>
@@ -251,8 +218,6 @@ const ViewSalary = () => {
                     <td className="view-salary-info">
                       <div
                         className="view-salary-info-wrapper view-in-mobile-only"
-                        onMouseEnter={handleViewSalaryInfo}
-                        onMouseLeave={handleHideSalaryInfo}
                       >
                         <div className='mobile-view-salary-info mobile-view-salary-info-wrapper'>
                           <span className='view-in-mobile-only'><strong>Income Tax:</strong> {calculateIncomeTax(record.salary)}</span>

@@ -23,11 +23,13 @@ import EmployeeLeaves from './EmployeeLeaves/EmployeeLeaves';
 import { UserProvider } from './Context/UserContext'; // Import UserProvider
 import EmpLoan from './EmpLoan/EmpLoan';
 import Dashboard3 from './Dashboard3/Dashboard3';
+import AppMessage from './components/AppMessage';
 
 const App = () => {
   return (
     <UserProvider>
       <Router>
+        <AppMessage />
         <Routes>
           <Route path="/" element={<Login />} />
 

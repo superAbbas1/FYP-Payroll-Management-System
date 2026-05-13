@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './EditSalary.css';
+import showMessage from '../utils/showMessage';
 
 const EditSalary = () => {
   const [departments, setDepartments] = useState([]);
@@ -10,10 +11,8 @@ const EditSalary = () => {
   const [selectedDepartmentID, setSelectedDepartmentID] = useState('');
   const [selectedDesignation, setSelectedDesignation] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
-  const [employeeName, setEmployeeName] = useState('');
   const [currentSalary, setCurrentSalary] = useState(''); // State for current salary
   const [enteredSalary, setEnteredSalary] = useState('');
-  const [salaryChanges, setSalaryChanges] = useState([]);
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -30,7 +29,7 @@ const EditSalary = () => {
 
   useEffect(() => {
     const fetchDesignations = async () => {
-      if (!selectedDepartment) return;
+      if (!selectedDepartmentID) return;
 
       try {
         const response = await axios.get(
@@ -43,7 +42,7 @@ const EditSalary = () => {
     };
 
     fetchDesignations();
-  }, [selectedDepartment]);
+  }, [selectedDepartmentID]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -70,27 +69,36 @@ const EditSalary = () => {
     const fetchSalary = async () => {
       if (!selectedEmployee) return;
 
+      const selectedEmp = employees.find(emp => emp._id === selectedEmployee);
+      if (selectedEmp?.salary != null) {
+        setCurrentSalary(selectedEmp.salary);
+        setEnteredSalary(selectedEmp.salary);
+      }
+
       try {
+        const employeeIdForSalary = selectedEmp?.employeeID || selectedEmployee;
         const response = await axios.get(
-          `http://localhost:5000/api/salary/${selectedEmployee}`
+          `http://localhost:5000/api/salary/${employeeIdForSalary}`
         );
         setCurrentSalary(response.data.salary || ''); // Set the current salary
         setEnteredSalary(response.data.salary || ''); // Set entered salary to current by default
       } catch (error) {
         console.error('Failed to fetch salary:', error);
-        setCurrentSalary('');
-        setEnteredSalary('');
+        if (selectedEmp?.salary == null) {
+          setCurrentSalary('');
+          setEnteredSalary('');
+        }
       }
     };
 
     fetchSalary();
-  }, [selectedEmployee]);
+  }, [selectedEmployee, employees]);
 
   const handleDepartmentChange = (event) => {
     const selectedDeptId = event.target.value;
     const selectedDept = departments.find(dept => dept._id === selectedDeptId);
     setSelectedDepartmentID(selectedDeptId);
-    setSelectedDepartment(selectedDept.name);  // Use name if you want the name in state
+    setSelectedDepartment(selectedDept?.name || '');
     setSelectedDesignation('');
     setSelectedEmployee('');
     setDesignations([]);
@@ -115,9 +123,8 @@ const EditSalary = () => {
 
     const selectedEmp = employees.find(emp => emp._id === employeeId);
     if (selectedEmp) {
-      setEmployeeName(`${selectedEmp.fname} ${selectedEmp.lname}`);
-    } else {
-      setEmployeeName('');
+      setCurrentSalary(selectedEmp.salary ?? '');
+      setEnteredSalary(selectedEmp.salary ?? '');
     }
   };
 
@@ -127,12 +134,12 @@ const EditSalary = () => {
 
   const handleSaveSalary = async () => {
     if (!enteredSalary) {
-      alert('Please enter a salary amount.');
+      showMessage('Please enter a salary amount.', 'warning');
       return;
     }
 
     if (enteredSalary === currentSalary) {
-      alert('The updated salary is the same as the current salary.');
+      showMessage('The updated salary is the same as the current salary.', 'warning');
       return;
     }
 
@@ -144,10 +151,10 @@ const EditSalary = () => {
     console.log('Sending payload:', payload);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/salary', payload);
+      await axios.post('http://localhost:5000/api/salary', payload);
       const nextMonth = new Date(new Date().setMonth(new Date().getMonth() + 1))
         .toLocaleString('default', { month: 'long' });
-      alert(`Salary updated from ${currentSalary} to ${enteredSalary} successfully for ${nextMonth}.`);
+      showMessage(`Salary updated from ${currentSalary} to ${enteredSalary} successfully for ${nextMonth}.`, 'success');
       setCurrentSalary(enteredSalary); // Update current salary in UI
     } catch (error) {
       console.error('Failed to save salary:', error);
@@ -161,7 +168,7 @@ const EditSalary = () => {
       <div className="edit-salary-filter-line grid-3-col">
         <div className="filter-item">
           <label>Department:</label>
-          <select value={selectedDepartment} onChange={handleDepartmentChange}>
+          <select value={selectedDepartmentID} onChange={handleDepartmentChange}>
             <option value="">Select Department</option>
             {departments.map((dept) => (
               <option key={dept._id} value={dept._id}>
@@ -207,6 +214,7 @@ const EditSalary = () => {
             type="number"
             value={currentSalary}
             disabled={!selectedEmployee}
+            readOnly
             style={{ width: '100%' }}
           />
         </div>

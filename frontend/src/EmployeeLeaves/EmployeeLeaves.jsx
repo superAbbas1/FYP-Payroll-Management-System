@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './EmployeeLeaves.css';
 import { jsx } from 'react/jsx-runtime';
+import showMessage from '../utils/showMessage';
 
 const EmployeeLeaves = () => {
   const [subject, setSubject] = useState('');
@@ -27,7 +28,9 @@ const EmployeeLeaves = () => {
 
   const handleSubmit = (e) => {
     if (!subject || !startDate || !endDate) {
-      alert("All inputs must be fulfilled");
+      showMessage("All inputs must be fulfilled", "warning");
+      e.preventDefault();
+      return;
     }
 
     e.preventDefault();

@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 import axios from 'axios';
+import showMessage from '../utils/showMessage';
 
 const Dashboard2 = () => {
   const location = useLocation();
@@ -46,7 +47,7 @@ const Dashboard2 = () => {
     const employeeId = localStorage.getItem('employeeId');
 
     if (!employeeId) {
-      alert("Employee ID not found. Please log in again.");
+      showMessage("Employee ID not found. Please log in again.", "error");
       return;
     }
 
@@ -57,12 +58,12 @@ const Dashboard2 = () => {
       const decryptedPassword = AES.decrypt(employee, "bsjdsab12bsandb213").toString(Utf8);
 
       if (decryptedPassword !== currentPassword) {
-        alert("Your current password is incorrect. Please try again.");
+        showMessage("Your current password is incorrect. Please try again.", "error");
         return;
       }
 
       if (newPassword !== confirmNewPassword) {
-        alert("The new password and confirmation password do not match. Please try again.");
+        showMessage("The new password and confirmation password do not match. Please try again.", "warning");
         return;
       }
       const updateResponse = await fetch(`http://localhost:5000/api/employees/${employeeId}/updatePassword`, {
@@ -75,14 +76,14 @@ const Dashboard2 = () => {
       });
 
       if (updateResponse.ok) {
-        alert("Password updated successfully.");
+        showMessage("Password updated successfully.", "success");
         handleCloseModal();
       } else {
-        alert("An error occurred while updating the password. Please try again.");
+        showMessage("An error occurred while updating the password. Please try again.", "error");
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      // alert("An error occurred. Please try again.");
+      showMessage("An error occurred. Please try again.", "error");
     }
   };
 

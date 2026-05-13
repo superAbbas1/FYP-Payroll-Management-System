@@ -1,6 +1,6 @@
 const User = require('../db/User');
 const SalaryRecord = require('../db/Salary');
-const { generateProvidentFundHistory } = require('../utils/helpers');
+const { generateProvidentFundHistory, calculateProvidentFundBalance } = require('../utils/helpers');
 
 /**
  * Update employee salary and recalculate PF
@@ -32,8 +32,8 @@ exports.updateSalary = async (req, res) => {
     // Regenerate PF history with new salary and SAVE it
     user.providentFund.history = generateProvidentFundHistory(user.joining, user.salaryHistory);
     
-    // Recalculate total balance and SAVE it
-    user.providentFund.balance = user.providentFund.history.reduce((sum, entry) => sum + entry.amount, 0);
+    // Recalculate total balance and keep approved PF loan withdrawals deducted.
+    user.providentFund.balance = calculateProvidentFundBalance(user.providentFund.history, user.loanHistory);
     
     await user.save();
     res.status(200).json({

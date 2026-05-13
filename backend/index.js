@@ -11,8 +11,7 @@ const loanRoutes = require('./routes/loanRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 
-// Import utilities and models
-const { sendEmail } = require('./utils/helpers');
+// Import models
 const User = require('./db/User');
 const AttendanceHistory = require('./db/Attendance');
 
@@ -26,36 +25,19 @@ app.use(cors());
 // ========================================
 // API ROUTES
 // ========================================
-
-// User and Authentication routes
 app.use('/api', userRoutes);
-
-// Attendance routes
+// Backward compatibility for legacy frontend calls without /api prefix.
+app.use('/', userRoutes);
 app.use('/', attendanceRoutes);
-
-// Salary routes
 app.use('/', salaryRoutes);
-
-// Provident Fund routes
 app.use('/', pfRoutes);
-
-// Loan routes
 app.use('/', loanRoutes);
-
-// Leave routes
 app.use('/', leaveRoutes);
-
-// Department routes
 app.use('/', departmentRoutes);
 
 // ========================================
 // SCHEDULED TASKS (CRON JOBS)
 // ========================================
-
-/**
- * Schedule auto-mark absent to run daily at 11:59 PM
- * The cron expression '59 23 * * *' means: at 23:59 (11:59 PM) every day
- */
 cron.schedule('59 23 * * *', async () => {
   console.log('Running scheduled auto-mark absent job...');
   try {
@@ -64,20 +46,16 @@ cron.schedule('59 23 * * *', async () => {
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
 
-    // Get all employees
     const allEmployees = await User.find({}, 'employeeID _id');
-
     let absentsMarked = 0;
 
     for (const employee of allEmployees) {
-      // Check if attendance is already marked for today
       const existingAttendance = await AttendanceHistory.findOne({
         employeeId: employee.employeeID,
         date: formattedDate
       });
 
       if (!existingAttendance) {
-        // Mark as absent if not already marked
         const newAttendance = new AttendanceHistory({
           employeeId: employee.employeeID,
           date: formattedDate,
@@ -90,20 +68,20 @@ cron.schedule('59 23 * * *', async () => {
       }
     }
 
-    console.log(`✅ Auto-mark absent completed: ${absentsMarked} absences marked on ${formattedDate}`);
+    console.log(`Auto-mark absent completed: ${absentsMarked} absences marked on ${formattedDate}`);
   } catch (error) {
-    console.error('❌ Error in auto-mark absent scheduled job:', error);
+    console.error('Error in auto-mark absent scheduled job:', error);
   }
 });
 
 // ========================================
 // SERVER STARTUP
 // ========================================
-
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || '127.0.0.1';
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server started on port ${PORT}`);
-  console.log('✅ All routes loaded');
-  console.log('✅ Cron jobs initialized');
+app.listen(PORT, HOST, () => {
+  console.log(`Server started at http://${HOST}:${PORT}`);
+  console.log('All routes loaded');
+  console.log('Cron jobs initialized');
 });

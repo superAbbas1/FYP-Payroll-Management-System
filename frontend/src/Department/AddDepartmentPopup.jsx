@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AddDepartmentPopup.css";
 import axios from 'axios';
+import showMessage from "../utils/showMessage";
 
 const AddDepartmentPopup = ({ onClose, onSave }) => {
   const [departmentName, setDepartmentName] = useState("");
@@ -39,7 +40,7 @@ const AddDepartmentPopup = ({ onClose, onSave }) => {
       onClose();
     } catch (error) {
       console.error('Failed to save department:', error);
-      alert('Failed to save department. Please try again.');
+      showMessage('Failed to save department. Please try again.', 'error');
     }
   };
 

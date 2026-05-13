@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 import "./Employeelist.css";
+import showMessage from "../utils/showMessage";
 
 Modal.setAppElement('#root'); // Setting app element for accessibility
 
@@ -51,7 +52,7 @@ const EmployeeList = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert(`Failed to delete employee: ${err.message}`);
+        showMessage(`Failed to delete employee: ${err.message}`, "error");
       });
   };
 
@@ -129,7 +130,7 @@ const EmployeeList = () => {
       })
       .catch((err) => {
         console.error("Failed to update employee:", err);
-        alert(`Failed to update employee: ${err.message}`);
+        showMessage(`Failed to update employee: ${err.message}`, "error");
       });
   };
 

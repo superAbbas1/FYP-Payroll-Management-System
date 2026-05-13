@@ -2,13 +2,14 @@
 
 import React, { useState } from "react";
 import "./AddDesignationPopup.css"; // Import your CSS file for styling
+import showMessage from "../utils/showMessage";
 
 const AddDesignationPopup = ({ department, onClose, onSave }) => {
   const [designation, setDesignation] = useState("");
 
   const handleSave = () => {
     if (designation.trim() === "") {
-      alert("Designation is required.");
+      showMessage("Designation is required.", "warning");
       return;
     }
     onSave(designation);
